@@ -10,6 +10,8 @@
 
 static void free_column(column_t *column)
 {
+    if (!column)
+        return;
     for (int i = 0; column->column_content[i]; i++)
         free(column->column_content[i]);
 }
