@@ -8,6 +8,6 @@
 #ifndef INCLUDED_CUDDLE_H
     #define INCLUDED_CUDDLE_H
 
-
+    #define READ_ONLY "r"
 
 #endif

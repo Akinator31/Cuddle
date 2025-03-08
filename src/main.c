@@ -5,7 +5,12 @@
 ** main
 */
 
+#include "dataframe.h"
+#include "garbage_collector.h"
+
 int main(void)
 {
+    df_read_csv("test.csv", ",");
+    free_garbage();
     return 0;
 }

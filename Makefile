@@ -9,7 +9,7 @@ SRC = $(shell find . -type f -name "*.c" ! -name "main.c" ! -path "./tests/*")
 
 SRC_TEST = $(shell find . -type f -name "*.c" ! -name "main.c")
 
-INCLUDE_H := $(shell find includes -type d)
+INCLUDE_H := $(shell find include -type d)
 
 INCLUDE = $(INCLUDE_H:%=-I%)
 
@@ -34,7 +34,7 @@ TESTING_NAME = test
 
 build/%.o: %.c
 		@mkdir -p $(dir $@)
-		@gcc $(CFLAGS) -c $< -o $@
+		@$(CC) $(CFLAGS) -c $< -o $@
 
 build-debug/%.o: %.c
 		@mkdir -p $(dir $@)
@@ -42,7 +42,7 @@ build-debug/%.o: %.c
 
 build-test/%.o: %.c
 		@mkdir -p $(dir $@)
-		@gcc $(TESTING_FLAGS) -c $< -o $@
+		@$(CC) $(TESTING_FLAGS) -c $< -o $@
 
 all: $(LIB_NAME)
 
@@ -53,12 +53,12 @@ $(LIB_NAME): $(OBJ)
 $(DEBUG_NAME): $(OBJ_DEBUG)
 	@rm -f $(LIB_NAME)
 	@ar rc $(LIB_NAME) $(MY_LIB) $(OBJ_DEBUG)
-	gcc src/main.c -o $(DEBUG_NAME) $(LIB_NAME) $(DEBUG_FLAGS)
+	$(CC) src/main.c -o $(DEBUG_NAME) $(LIB_NAME) $(DEBUG_FLAGS)
 
 tests_run: $(OBJ_TEST)
 	@rm -f $(LIB_NAME)
 	@ar rc $(LIB_NAME) $(MY_LIB) $(OBJ_TEST)
-	gcc tests/criterion_tests.c -o $(TESTING_NAME) $(LIB_NAME) $(TESTING_FLAGS)
+	$(CC) tests/criterion_tests.c -o $(TESTING_NAME) $(LIB_NAME) $(TESTING_FLAGS)
 	./$(TESTING_NAME)
 
 show_test: tests_run
