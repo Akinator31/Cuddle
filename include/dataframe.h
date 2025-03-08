@@ -34,6 +34,7 @@ typedef struct dataframe_shape_s {
     int nb_columns;
 } dataframe_shape_t;
 
+// CORE FUNCTIONS
 dataframe_t *df_read_csv(const char *filename, const char *separator);
 dataframe_t *df_write_csv(dataframe_t *dataframe, const char *filename);
 
