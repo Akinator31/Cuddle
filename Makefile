@@ -17,7 +17,7 @@ OBJ = 	$(SRC:%.c=build/%.o)
 
 OBJ_DEBUG = $(SRC:%.c=build-debug/%.o)
 
-OBJ_TEST = $(SRC:%.c=build-test/%.o)
+OBJ_TEST = $(SRC_TEST:%.c=build-test/%.o)
 
 CFLAGS += 	-Wextra -Wall -lm $(INCLUDE)
 
@@ -33,16 +33,16 @@ DEBUG_NAME = debug
 TESTING_NAME = test
 
 build/%.o: %.c
-		@mkdir -p $(dir $@)
-		@$(CC) $(CFLAGS) -c $< -o $@
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 build-debug/%.o: %.c
-		@mkdir -p $(dir $@)
-		@gcc $(DEBUG_FLAGS) -c $< -o $@
+	@mkdir -p $(dir $@)
+	@gcc $(DEBUG_FLAGS) -c $< -o $@
 
 build-test/%.o: %.c
-		@mkdir -p $(dir $@)
-		@$(CC) $(TESTING_FLAGS) -c $< -o $@
+	@mkdir -p $(dir $@)
+	@$(CC) $(TESTING_FLAGS) -c $< -o $@
 
 all: $(LIB_NAME)
 
@@ -58,7 +58,8 @@ $(DEBUG_NAME): $(OBJ_DEBUG)
 tests_run: $(OBJ_TEST)
 	@rm -f $(LIB_NAME)
 	@ar rc $(LIB_NAME) $(MY_LIB) $(OBJ_TEST)
-	$(CC) tests/criterion_tests.c -o $(TESTING_NAME) $(LIB_NAME) $(TESTING_FLAGS)
+	$(CC) -o $(TESTING_NAME) $(LIB_NAME) \
+		$(TESTING_FLAGS)
 	./$(TESTING_NAME)
 
 show_test: tests_run
