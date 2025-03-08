@@ -7,7 +7,7 @@
 
 #ifndef INCLUDED_CUDDLE_H
     #define INCLUDED_CUDDLE_H
-
+    #define PACKED __attribute__((packed))
     #define READ_ONLY "r"
 
 #endif
