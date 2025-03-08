@@ -36,6 +36,7 @@ jobs:
 
           if [ "$ERRORS" -ne "0" ]; then
             echo "🚨 $ERRORS erreurs de coding style détectées !"
+            cat coding-style-reports.log
             exit 1
           else
             echo "👽️ Aucun problème de coding style détecté !"
