@@ -5,6 +5,7 @@
 ** df_free
 */
 
+#include <stdlib.h>
 #include "dataframe.h"
 
 static void free_column(column_t *column)
