@@ -8,6 +8,8 @@
 #ifndef DATAFRAME_H
     #define DATAFRAME_H
 
+    #include <stddef.h>
+
 typedef enum {
     BOOL,
     INT,
@@ -19,12 +21,13 @@ typedef enum {
 
 typedef struct column_s {
     column_type_t type;
+    char *name;
     char **column_content;
 } column_t;
 
 typedef struct dataframe_s {
-    int nb_rows;
-    int nb_columns;
+    size_t nb_rows;
+    size_t nb_columns;
     column_t **columns;
 } dataframe_t;
 

@@ -7,6 +7,7 @@
 
 #include "dataframe.h"
 #include "garbage_collector.h"
+#include <sys/ucontext.h>
 
 int main(void)
 {
