@@ -7,11 +7,14 @@
 
 #include "dataframe.h"
 #include "garbage_collector.h"
+#include <stdio.h>
 #include <sys/ucontext.h>
 
 int main(void)
 {
-    df_read_csv("test.csv", ",");
+    dataframe_t *data = df_read_csv("test.csv", ",");
+
+    printf("%s\n", data->columns[0]->column_content[0]);
     free_garbage();
     return 0;
 }
