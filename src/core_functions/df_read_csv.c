@@ -14,6 +14,7 @@
 #include <stdbool.h>
 #include "cuddle.h"
 #include "dataframe.h"
+#include "errors.h"
 #include "lib.h"
 #include "garbage_collector.h"
 
@@ -41,11 +42,9 @@ static dataframe_t *create_dataframe(
 
     data = my_calloc(1, sizeof(dataframe_t));
     data->nb_rows = 0;
-    if (getlinex(&content, &line_size, fptr) == -1 || !content) {
-        puts("Bad line");
-        return NULL;
-    }
-    line_content = str_to_word_array(content, separators);
+    if (getlinex(&content, &line_size, fptr) == -1 || !content)
+        return write_error(BAD_LINE, EMPTY_STRING, (long)data->nb_rows);
+    line_content = line_to_row(content, separators);
     data->nb_columns = str_array_len(line_content);
     data->columns = my_calloc(1, sizeof(column_t *) * data->nb_columns);
     for (size_t i = 0; line_content[i]; i++)
@@ -61,10 +60,8 @@ static dataframe_t *fill_columns(
     static size_t col_size = 1;
     bool realloc_columns_content = false;
 
-    if (str_array_len(content) != data->nb_columns) {
-        puts("Uneven amount of rows");
-        return NULL;
-    }
+    if (str_array_len(content) != data->nb_columns)
+        return write_error(UNEVEN_LINES, EMPTY_STRING, (long)data->nb_rows);
     if (data->nb_rows >= col_size - 1) {
         col_size <<= 1;
         realloc_columns_content = true;
@@ -93,7 +90,7 @@ static dataframe_t *read_file(
     if (!data)
         return NULL;
     while (getlinex(&content, &line_size, fptr) != -1 && content) {
-        line_content = str_to_word_array(content, separators);
+        line_content = line_to_row(content, separators);
         if (!fill_columns(line_content, data))
             return NULL;
         data->nb_rows++;
@@ -103,16 +100,23 @@ static dataframe_t *read_file(
     return data;
 }
 
-static void check_file(const char *filename)
+static FILE *check_file(const char *filename)
 {
     struct stat stat_buffer;
+    FILE *fptr = NULL;
 
     if (!strchr(filename, '.') || strcmp(strchr(filename, '.'), ".csv"))
-        puts("Not a csv");
-    if (stat(filename, &stat_buffer) == -1)
+        write_error(NOT_CSV, filename, -1);
+    if (stat(filename, &stat_buffer) == -1) {
         perror(strerror(errno));
+        return NULL;
+    }
     if (stat_buffer.st_size == 0)
-        puts("Empty file");
+        return write_error(EMPTY_FILE, filename, -1);
+    fptr = fopen(filename, READ_ONLY);
+    if (!fptr)
+        perror(strerror(errno));
+    return fptr;
 }
 
 dataframe_t *df_read_csv(
@@ -122,14 +126,11 @@ dataframe_t *df_read_csv(
     FILE *fptr = NULL;
     dataframe_t *data = NULL;
 
-    check_file(filename);
-    fptr = fopen(filename, READ_ONLY);
-    if (!fptr) {
-        perror(strerror(errno));
-        return NULL;
-    }
+    fptr = check_file(filename);
+    if (!fptr)
+        return lib_exit();
     data = read_file(fptr, separators);
     if (!data)
-        return NULL;
+        return lib_exit();
     return data;
 }

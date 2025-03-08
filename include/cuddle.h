@@ -7,7 +7,13 @@
 
 #ifndef INCLUDED_CUDDLE_H
     #define INCLUDED_CUDDLE_H
+
+// Structure alignment
     #define PACKED __attribute__((packed))
+
+// File modes
     #define READ_ONLY "r"
+
+    #define EMPTY_STRING ""
 
 #endif
