@@ -25,7 +25,6 @@ static column_t *create_column(char *name)
     column->type = UNDEFINED;
 }
 
-
 static dataframe_t *create_dataframe(FILE *fptr, const char *separators)
 {
     dataframe_t *data = NULL;
