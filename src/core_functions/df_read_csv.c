@@ -15,14 +15,15 @@
 #include "cuddle.h"
 #include "dataframe.h"
 #include "lib.h"
+#include "garbage_collector.h"
 
 static column_t *create_column(char *name)
 {
     column_t *column = NULL;
 
-    column = calloc(1, sizeof(column_t));
+    column = my_calloc(1, sizeof(column_t));
     column->name = name;
-    column->column_content = calloc(1, sizeof(char *) * 2);
+    column->column_content = my_calloc(1, sizeof(char *) * 2);
     column->column_content[0] = NULL;
     column->column_content[1] = NULL;
     column->type = UNDEFINED;
@@ -38,13 +39,15 @@ static dataframe_t *create_dataframe(
     char **line_content = NULL;
     size_t line_size = 0;
 
-    data = calloc(1, sizeof(dataframe_t));
+    data = my_calloc(1, sizeof(dataframe_t));
     data->nb_rows = 0;
-    if (getline(&content, &line_size, fptr) == -1 || !content)
+    if (getline(&content, &line_size, fptr) == -1 || !content) {
+        puts("Bad line");
         return NULL;
+    }
     line_content = str_to_word_array(content, separators);
     data->nb_columns = str_array_len(line_content);
-    data->columns = calloc(1, sizeof(column_t *) * data->nb_columns);
+    data->columns = my_calloc(1, sizeof(column_t *) * data->nb_columns);
     for (size_t i = 0; line_content[i]; i++)
         data->columns[i] = create_column(line_content[i]);
     free(content);
@@ -55,21 +58,24 @@ static dataframe_t *fill_columns(
     char **content,
     dataframe_t *data)
 {
-    static size_t column_size = 1;
+    static size_t col_size = 1;
     bool realloc_columns_content = false;
 
-    if (str_array_len(content) != data->nb_columns)
+    if (str_array_len(content) != data->nb_columns) {
+        puts("Uneven amount of rows");
         return NULL;
-    if (data->nb_rows >= column_size - 1) {
-        column_size <<= 1;
+    }
+    if (data->nb_rows >= col_size - 1) {
+        col_size <<= 1;
         realloc_columns_content = true;
     }
     for (size_t i = 0; i < data->nb_columns; i++) {
         if (realloc_columns_content)
-            data->columns[i]->column_content = realloc(
-                data->columns[i]->column_content,
-                sizeof(char *) * (column_size + 1));
-        data->columns[i]->column_content[i] = strdup(content[i]);
+            data->columns[i]->column_content = my_realloc(
+                data->columns[i]->column_content, 8 * (col_size + 1),
+                8 * ((col_size >> 1) + 1));
+        data->columns[i]->column_content[data->nb_rows] =
+            my_strdup(content[i]);
     }
     return data;
 }

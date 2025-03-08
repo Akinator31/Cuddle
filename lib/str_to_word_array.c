@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdlib.h>
+#include "garbage_collector.h"
+#include "lib.h"
 
 static bool is_delim(
     char c,
@@ -18,7 +20,7 @@ static bool is_delim(
 {
     if (c == '\0')
         return true;
-    for (int i = 0; delim[i] != '\0'; i++)
+    for (size_t i = 0; delim[i] != '\0'; i++)
         if (c == delim[i])
             return true;
     return false;
@@ -34,22 +36,21 @@ static size_t count_delim(const char *str, const char *delim)
     return count;
 }
 
-static int find_non_delim(
+static size_t find_next_delim(
     const char *str,
-    int i,
+    size_t i,
     const char *delim)
 {
-    while (str[i] != '\0') {
-        if (!is_delim(str[i], delim))
-            break;
+    while (str[i] != '\0' && !is_delim(str[i], delim))
         i++;
-    }
-    return i;
+    if (str[i] == '\0')
+        return i;
+    return i + 1;
 }
 
-static int find_delim(
+static size_t find_delim(
     const char *str,
-    int i,
+    size_t i,
     const char *delim)
 {
     while (str[i] != '\0') {
@@ -64,22 +65,22 @@ char **str_to_word_array(
     const char *str,
     const char *delim)
 {
-    int index = 0;
-    int word_size = 0;
+    size_t index = 0;
+    size_t word_size = 0;
     char **array =
-        malloc(sizeof(char *) * (count_delim(str, delim) + 2));
+        my_malloc(sizeof(char *) * (count_delim(str, delim) + 2));
 
-    str = &str[find_non_delim(str, 0, delim)];
-    for (int i = 0; str[i] != '\0'; index++) {
+    for (size_t i = 0; str[i] != '\0'; index++) {
+        printf("%lu\n", index);
         word_size = (find_delim(str, i, delim) - i + 1);
-        array[index] = calloc((size_t)word_size, sizeof(char));
+        array[index] = my_calloc((size_t)word_size, sizeof(char));
         if (is_delim(str[i], delim))
-            i = find_non_delim(str, i, delim);
-        for (int j = 0; !is_delim(str[i], delim) == true; j++) {
+            i = find_delim(str, i, delim);
+        for (size_t j = 0; !is_delim(str[i], delim) == true; j++) {
             array[index][j] = str[i];
             i++;
         }
-        i = find_non_delim(str, i, delim);
+        i = find_next_delim(str, i, delim);
     }
     array[index] = NULL;
     return array;

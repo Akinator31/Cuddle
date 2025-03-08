@@ -19,12 +19,15 @@ OBJ_DEBUG = $(SRC:%.c=build-debug/%.o)
 
 OBJ_TEST = $(SRC_TEST:%.c=build-test/%.o)
 
-CFLAGS += 	-lm -Weverything -Wno-pointer-bool-conversion $(INCLUDE)
+COMPILE_FLAGS = -Weverything -Wno-pointer-bool-conversion \
+				-Wno-unsafe-buffer-usage
 
-DEBUG_FLAGS = -fsanitize=address -g3 -lm -Weverything $(INCLUDE)
+CFLAGS += 	-lm $(COMPILE_FLAGS) $(INCLUDE)
+
+DEBUG_FLAGS = -fsanitize=address -g3 -lm $(COMPILE_FLAGS) $(INCLUDE)
 
 TESTING_FLAGS = -fsanitize=address -g3 --coverage -lgcov \
-				-lcriterion -lm -Weverything $(INCLUDE)
+				-lcriterion -lm $(COMPILE_FLAGS) $(INCLUDE)
 
 LIB_NAME = libcuddle.a
 
@@ -40,7 +43,7 @@ build/%.o: %.c
 
 build-debug/%.o: %.c
 	@mkdir -p $(dir $@)
-	@gcc $(DEBUG_FLAGS) -c $< -o $@
+	@$(CC) $(DEBUG_FLAGS) -c $< -o $@
 
 build-test/%.o: %.c
 	@mkdir -p $(dir $@)

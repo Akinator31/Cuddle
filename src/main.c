@@ -14,6 +14,10 @@ int main(void)
 {
     dataframe_t *data = df_read_csv("test.csv", ",");
 
+    if (!data) {
+        printf("ERROR");
+        return 84;
+    }
     printf("%s\n", data->columns[0]->column_content[0]);
     free_garbage();
     return 0;

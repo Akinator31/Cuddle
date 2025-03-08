@@ -6,6 +6,7 @@
 */
 
 #include <stdio.h>
+#include <lib.h>
 
 void print_str_array(char **array)
 {
@@ -19,6 +20,7 @@ size_t str_array_len(char **array)
 {
     size_t count = 0;
 
-    for(; array[count]; count++);
+    while (array[count] != NULL)
+        count++;
     return count;
 }

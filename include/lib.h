@@ -11,7 +11,7 @@
     #include <stddef.h>
 
 char **str_to_word_array(const char *str, const char *delim);
-void print_array(char **array);
+void print_str_array(char **array);
 size_t str_array_len(char **array);
 
 #endif /* LIB_H */
