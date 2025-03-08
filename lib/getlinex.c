@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <lib.h>
 
 ssize_t getlinex(
     char **restrict lineptr,
@@ -17,6 +18,7 @@ ssize_t getlinex(
 
     if (result == -1)
         return -1;
-    *lineptr[strcspn(*lineptr, "\n")] = '\0';
+    if (lineptr)
+        (*lineptr)[strcspn(*lineptr, "\n")] = '\0';
     return result;
 }
