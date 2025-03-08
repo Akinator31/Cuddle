@@ -97,7 +97,6 @@ static dataframe_t *read_file(
         if (!fill_columns(line_content, data))
             return NULL;
         data->nb_rows++;
-        printf("%lu\n", data->nb_rows);
     }
     if (content)
         free(content);
