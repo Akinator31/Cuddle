@@ -17,10 +17,15 @@ typedef enum {
     UNDEFINED
 } column_type_t;
 
+typedef struct column_s {
+    column_type_t type;
+    char **column_content;
+} column_t;
+
 typedef struct dataframe_s {
     int nb_rows;
     int nb_columns;
-    column_type_t *types;
+    column_t **columns;
 } dataframe_t;
 
 dataframe_t *df_read_csv(const char *filename, const char *separator);
