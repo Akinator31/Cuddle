@@ -117,5 +117,8 @@ __attribute__((nonnull(1, 2)));
 void df_free(
     dataframe_t *dataframe)
 __attribute__((nonnull(1)));
+void df_dump(
+    dataframe_t *dataframe)
+__attribute__((nonnull(1)));
 
 #endif /* DATAFRAME_H */
