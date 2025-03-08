@@ -8,7 +8,10 @@
 #include <stdio.h>
 #include <string.h>
 
-ssize_t getlinex(char **restrict lineptr, size_t *restrict n, FILE *restrict stream)
+ssize_t getlinex(
+    char **restrict lineptr,
+    size_t *restrict n,
+    FILE *restrict stream)
 {
     ssize_t result = getline(lineptr, n, stream);
 

@@ -16,6 +16,9 @@ void print_str_array(char **array);
 size_t str_array_len(char **array);
 
 // getline wrapper to remove newline characters
-ssize_t getlinex(char **restrict lineptr, size_t *restrict n, FILE *restrict stream);
+ssize_t getlinex(
+    char **restrict lineptr,
+    size_t *restrict n,
+    FILE *restrict stream);
 
 #endif /* LIB_H */
