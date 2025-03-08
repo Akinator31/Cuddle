@@ -41,7 +41,7 @@ static dataframe_t *create_dataframe(
 
     data = my_calloc(1, sizeof(dataframe_t));
     data->nb_rows = 0;
-    if (getline(&content, &line_size, fptr) == -1 || !content) {
+    if (getlinex(&content, &line_size, fptr) == -1 || !content) {
         puts("Bad line");
         return NULL;
     }
@@ -92,12 +92,12 @@ static dataframe_t *read_file(
     data = create_dataframe(fptr, separators);
     if (!data)
         return NULL;
-    while (getline(&content, &line_size, fptr) != -1 && content) {
-        content[strlen(content) - 1] = 0;
+    while (getlinex(&content, &line_size, fptr) != -1 && content) {
         line_content = str_to_word_array(content, separators);
         if (!fill_columns(line_content, data))
             return NULL;
         data->nb_rows++;
+        printf("%lu\n", data->nb_rows);
     }
     if (content)
         free(content);

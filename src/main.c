@@ -12,7 +12,7 @@
 
 int main(void)
 {
-    dataframe_t *data = df_read_csv("test.csv", ",");
+    dataframe_t *data = df_read_csv("data_medium.csv", ",");
 
     if (!data) {
         printf("ERROR");

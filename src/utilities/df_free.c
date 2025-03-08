@@ -14,6 +14,7 @@ static void free_column(column_t *column)
         return;
     for (int i = 0; column->column_content[i]; i++)
         free(column->column_content[i]);
+    free(column->name);
 }
 
 void df_free(dataframe_t *dataframe)
