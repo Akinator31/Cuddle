@@ -19,18 +19,20 @@ OBJ_DEBUG = $(SRC:%.c=build-debug/%.o)
 
 OBJ_TEST = $(SRC_TEST:%.c=build-test/%.o)
 
-CFLAGS += 	-Wextra -Wall -lm $(INCLUDE)
+CFLAGS += 	-lm -Weverything -Wno-pointer-bool-conversion $(INCLUDE)
 
-DEBUG_FLAGS = -fsanitize=address -g3 -Wextra -Wall -lm $(INCLUDE)
+DEBUG_FLAGS = -fsanitize=address -g3 -lm -Weverything $(INCLUDE)
 
 TESTING_FLAGS = -fsanitize=address -g3 --coverage -lgcov \
-				-lcriterion -lm $(INCLUDE)
+				-lcriterion -lm -Weverything $(INCLUDE)
 
 LIB_NAME = libcuddle.a
 
 DEBUG_NAME = debug
 
 TESTING_NAME = test
+
+CC	=	clang
 
 build/%.o: %.c
 	@mkdir -p $(dir $@)
