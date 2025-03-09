@@ -42,16 +42,17 @@ static char *quote_strdup(
 
 char **line_to_row(
     const char *line,
-    const char *delimiters)
+    const char *delimiters,
+    size_t *column_count)
 {
     char **row = NULL;
     size_t max_words = 0;
 
     max_words = count_delimiters(line, delimiters);
     row = my_calloc(max_words + 2, sizeof(char *));
-    for (size_t i = 0; i < max_words + 1 && *line; i++) {
-        row[i] = quote_strdup(line, delimiters);
-        line = &line[strlen(row[i]) + 1];
+    for (*column_count = 0; *column_count < max_words + 1 && *line; (*column_count)++) {
+        row[*column_count] = quote_strdup(line, delimiters);
+        line = &line[strlen(row[*column_count]) + 1];
     }
     return row;
 }

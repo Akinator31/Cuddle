@@ -13,8 +13,8 @@ static void free_column(column_t *column, size_t rows)
     if (!column)
         return;
     for (size_t i = 0; i < rows; i++) {
-        if (column->column_content[i])
-            free(column->column_content[i]);
+        if (column->content_strings[i])
+            free(column->content_strings[i]);
     }
     if (column->name)
         free(column->name);

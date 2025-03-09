@@ -27,7 +27,8 @@ static void **add_to_garbage_array(
     return array;
 }
 
-static void modify_garbage_ptr(void **array,
+static void modify_garbage_ptr(
+    void **array,
     void *old_ptr,
     void *new_ptr,
     size_t garbage_size)
@@ -62,9 +63,8 @@ void collect_garbage(
         garbage_array = add_to_garbage_array(garbage_array, ptr, garbage_size);
         garbage_size++;
     }
-    if (mode == MODIF_MODE) {
+    if (mode == MODIF_MODE)
         modify_garbage_ptr(garbage_array, old_ptr, ptr, garbage_size);
-    }
     if (mode == FREE_MODE)
         free_garbage_array(garbage_array, garbage_size);
 }

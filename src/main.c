@@ -15,7 +15,6 @@ int main(__attribute__((unused))int argc, char **argv)
 
     if (!data)
         return 84;
-    printf("%lu\n", data->nb_rows);
     df_free(data);
     return 0;
 }
