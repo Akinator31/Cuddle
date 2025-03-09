@@ -18,12 +18,12 @@
 #include "lib.h"
 #include "garbage_collector.h"
 
-static column_t *create_column(char *name)
+static column_t *create_column(const char *name)
 {
     column_t *column = NULL;
 
     column = my_calloc(1, sizeof(column_t));
-    column->name = name;
+    column->name = my_strdup(name);
     column->column_content = my_calloc(1, sizeof(char *) * 2);
     column->column_content[0] = NULL;
     column->column_content[1] = NULL;
@@ -43,7 +43,7 @@ static dataframe_t *create_dataframe(
     data = my_calloc(1, sizeof(dataframe_t));
     data->nb_rows = 0;
     if (getlinex(&content, &line_size, fptr) == -1 || !content)
-        return write_error(BAD_LINE, EMPTY_STRING, (long)data->nb_rows);
+        return write_error(BAD_LINE, EMPTY_STRING, (long)data->nb_rows + 2);
     line_content = line_to_row(content, separators);
     data->nb_columns = str_array_len(line_content);
     data->columns = my_calloc(1, sizeof(column_t *) * data->nb_columns);
@@ -53,24 +53,37 @@ static dataframe_t *create_dataframe(
     return data;
 }
 
+static column_t *increase_column_size(
+    column_t *column,
+    size_t col_size)
+{
+    size_t realloc_size = 0;
+    size_t old_size = 0;
+
+    realloc_size = sizeof(char *) * (col_size + 1);
+    old_size = sizeof(char *) * ((col_size >> 1) + 1);
+    column->column_content =
+        my_realloc(column->column_content, realloc_size, old_size);
+    return column;
+}
+
 static dataframe_t *fill_columns(
     char **content,
-    dataframe_t *data)
+    dataframe_t *data,
+    const char *filename)
 {
     static size_t col_size = 1;
     bool realloc_columns_content = false;
 
     if (str_array_len(content) != data->nb_columns)
-        return write_error(UNEVEN_LINES, EMPTY_STRING, (long)data->nb_rows);
+        return write_error(UNEVEN_LINES, filename, (long)data->nb_rows + 2);
     if (data->nb_rows >= col_size - 1) {
         col_size <<= 1;
         realloc_columns_content = true;
     }
     for (size_t i = 0; i < data->nb_columns; i++) {
         if (realloc_columns_content)
-            data->columns[i]->column_content = my_realloc(
-                data->columns[i]->column_content, 8 * (col_size + 1),
-                8 * ((col_size >> 1) + 1));
+            increase_column_size(data->columns[i], col_size);
         data->columns[i]->column_content[data->nb_rows] =
             my_strdup(content[i]);
     }
@@ -79,7 +92,8 @@ static dataframe_t *fill_columns(
 
 static dataframe_t *read_file(
     FILE *fptr,
-    const char *separators)
+    const char *separators,
+    const char *filename)
 {
     char *content = NULL;
     char **line_content = NULL;
@@ -91,8 +105,10 @@ static dataframe_t *read_file(
         return NULL;
     while (getlinex(&content, &line_size, fptr) != -1 && content) {
         line_content = line_to_row(content, separators);
-        if (!fill_columns(line_content, data))
+        if (!fill_columns(line_content, data, filename)) {
+            free(content);
             return NULL;
+        }
         data->nb_rows++;
     }
     if (content)
@@ -129,7 +145,7 @@ dataframe_t *df_read_csv(
     fptr = check_file(filename);
     if (!fptr)
         return lib_exit();
-    data = read_file(fptr, separators);
+    data = read_file(fptr, separators, filename);
     if (!data)
         return lib_exit();
     return data;

@@ -8,6 +8,8 @@
 #ifndef INCLUDED_CUDDLE_H
     #define INCLUDED_CUDDLE_H
 
+    #define CSV_QUOTED_STRINGS
+
 // Structure alignment
     #define PACKED __attribute__((packed))
 

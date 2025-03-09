@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "garbage_collector.h"
+#include "lib.h"
+#include "cuddle.h"
 
 static size_t count_delimiters(
     const char *str,
@@ -22,20 +24,20 @@ static size_t count_delimiters(
     return count;
 }
 
-char *quote_strdup(
+static char *quote_strdup(
     const char *string,
     const char *delimiters)
 {
-    char *word = NULL;
     size_t word_len = 0;
 
-    word_len = strcspn(string, delimiters);
+#if defined(CSV_QUOTED_STRINGS)
     if (string[0] == '"')
         word_len = strcspn(&string[1], "\"") + 2;
+#endif
+    word_len += strcspn(&string[word_len], delimiters);
     if (word_len == 0)
-        return strdup("");
-    word = strndup(string, word_len);
-    return word;
+        return my_strdup("");
+    return my_strndup(string, word_len);
 }
 
 char **line_to_row(
@@ -46,8 +48,8 @@ char **line_to_row(
     size_t max_words = 0;
 
     max_words = count_delimiters(line, delimiters);
-    row = my_calloc(count_delimiters(line, delimiters) + 2, sizeof(char *));
-    for (size_t i = 0; i < max_words + 1; i++) {
+    row = my_calloc(max_words + 2, sizeof(char *));
+    for (size_t i = 0; i < max_words + 1 && *line; i++) {
         row[i] = quote_strdup(line, delimiters);
         line = &line[strlen(row[i]) + 1];
     }
