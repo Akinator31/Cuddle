@@ -19,6 +19,6 @@ ssize_t getlinex(
     if (result == -1)
         return -1;
     if (lineptr)
-        (*lineptr)[strcspn(*lineptr, "\n")] = '\0';
+        (*lineptr)[strcspn(*lineptr, "\n\r")] = '\0';
     return result;
 }
