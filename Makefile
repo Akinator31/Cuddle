@@ -35,6 +35,8 @@ DEBUG_NAME = debug
 
 TESTING_NAME = test
 
+RUN_NAME = cuddle
+
 CC	=	clang
 
 build/%.o: %.c
@@ -53,12 +55,18 @@ all: $(LIB_NAME)
 
 $(LIB_NAME): $(OBJ)
 	@rm -f $(LIB_NAME)
-	@ar rc $(LIB_NAME) $(MY_LIB) $(OBJ)
+	@ar rc $(LIB_NAME) $(OBJ)
 
 $(DEBUG_NAME): $(OBJ_DEBUG)
 	@rm -f $(LIB_NAME)
-	@ar rc $(LIB_NAME) $(MY_LIB) $(OBJ_DEBUG)
+	@ar rc $(LIB_NAME) $(OBJ_DEBUG)
 	$(CC) src/main.c -o $(DEBUG_NAME) $(LIB_NAME) $(DEBUG_FLAGS)
+
+run: $(OBJ)
+	@rm -f $(LIB_NAME)
+	@ar rc $(LIB_NAME) $(OBJ)
+	$(CC) src/main.c -o $(RUN_NAME) $(LIB_NAME) $(CFLAGS)
+	./$(RUN_NAME)
 
 tests_run: $(OBJ_TEST)
 	@rm -f $(LIB_NAME)
