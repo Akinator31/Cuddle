@@ -11,6 +11,7 @@
     #include "cuddle.h"
 
     #include <stddef.h>
+    #include <sys/types.h>
 
 typedef enum {
     BOOL,
@@ -21,10 +22,17 @@ typedef enum {
     UNDEFINED
 } column_type_t;
 
+typedef union column_content_u {
+    bool boolean;
+    int integer;
+    double floating_point;
+} column_content_t;
+
 typedef struct PACKED column_s {
     column_type_t type;
     char *name;
-    char **column_content;
+    char **content_strings;
+    column_content_t **content;
 } column_t;
 
 typedef struct dataframe_s {
@@ -43,7 +51,7 @@ dataframe_t *df_read_csv(
     const char *filename,
     const char *separator)
 __attribute__((nonnull(1)));
-dataframe_t *df_write_csv(
+int df_write_csv(
     dataframe_t *dataframe,
     const char *filename)
 __attribute__((nonnull(1, 2)));
@@ -117,5 +125,15 @@ __attribute__((nonnull(1, 2)));
 void df_free(
     dataframe_t *dataframe)
 __attribute__((nonnull(1)));
+void df_dump(
+    dataframe_t *dataframe)
+__attribute__((nonnull(1)));
+
+// More functions
+dataframe_t *resolve_types(dataframe_t *data);
+column_t *fill_column_types(
+    column_t *column,
+    column_type_t *type,
+    size_t nb_rows);
 
 #endif /* DATAFRAME_H */

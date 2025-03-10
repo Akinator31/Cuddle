@@ -71,7 +71,6 @@ char **str_to_word_array(
         my_malloc(sizeof(char *) * (count_delim(str, delim) + 2));
 
     for (size_t i = 0; str[i] != '\0'; index++) {
-        printf("%lu\n", index);
         word_size = (find_delim(str, i, delim) - i + 1);
         array[index] = my_calloc((size_t)word_size, sizeof(char));
         if (is_delim(str[i], delim))

@@ -6,19 +6,16 @@
 */
 
 #include "dataframe.h"
-#include "garbage_collector.h"
 #include <stdio.h>
 #include <sys/ucontext.h>
 
-int main(void)
+int main(__attribute__((unused))int argc, char **argv)
 {
-    dataframe_t *data = df_read_csv("test.csv", ",");
+    dataframe_t *data = df_read_csv(argv[1], ",");
 
-    if (!data) {
-        printf("ERROR");
+    if (!data)
         return 84;
-    }
-    printf("%s\n", data->columns[0]->column_content[0]);
-    free_garbage();
+    df_write_csv(data, argv[2]);
+    df_free(data);
     return 0;
 }
