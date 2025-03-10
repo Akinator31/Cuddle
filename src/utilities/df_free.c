@@ -17,6 +17,7 @@ static void free_column(column_t *column, size_t rows)
             free(column->content_strings[i]);
     }
     free(column->content_strings);
+    free(column->content);
     if (column->name)
         free(column->name);
     free(column);
