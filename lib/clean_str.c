@@ -24,8 +24,10 @@ char *clean_str(char *str)
     }
     while (end >= start && isspace(str[end]))
         end--;
-    while (start <= end)
-        str[i++] = str[start++];
+    for (; start <= end; i++) {
+        str[i] = str[start];
+        start++;
+    }
     str[i] = '\0';
     return str;
 }

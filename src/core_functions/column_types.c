@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <strings.h>
 #include "dataframe.h"
-#include "lib.h"
 
 static bool is_bool(char *string)
 {

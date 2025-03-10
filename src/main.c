@@ -15,6 +15,7 @@ int main(__attribute__((unused))int argc, char **argv)
 
     if (!data)
         return 84;
+    df_write_csv(data, argv[2]);
     df_free(data);
     return 0;
 }

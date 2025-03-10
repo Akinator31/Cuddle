@@ -26,7 +26,6 @@ typedef union column_content_u {
     bool boolean;
     int integer;
     double floating_point;
-    char *string;
 } column_content_t;
 
 typedef struct PACKED column_s {
@@ -52,7 +51,7 @@ dataframe_t *df_read_csv(
     const char *filename,
     const char *separator)
 __attribute__((nonnull(1)));
-dataframe_t *df_write_csv(
+int df_write_csv(
     dataframe_t *dataframe,
     const char *filename)
 __attribute__((nonnull(1, 2)));

@@ -76,8 +76,10 @@ static dataframe_t *fill_columns(
     static size_t col_size = 1;
     bool realloc_columns_content = false;
 
-    if (column_count != data->nb_columns)
+    if (column_count != data->nb_columns) {
+        printf("Expected: %lu | Actual: %lu\n", data->nb_columns, column_count);
         return write_error(UNEVEN_LINES, filename, (long)data->nb_rows + 2);
+    }
     if (data->nb_rows >= col_size - 1) {
         col_size <<= 1;
         realloc_columns_content = true;
