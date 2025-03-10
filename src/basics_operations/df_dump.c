@@ -10,6 +10,8 @@
 
 void df_dump(dataframe_t *dataframe)
 {
+    if (!dataframe)
+        return;
     for (size_t i = 0; i < dataframe->nb_columns; i++) {
         printf("| %-10s ", dataframe->columns[i]->name);
     }

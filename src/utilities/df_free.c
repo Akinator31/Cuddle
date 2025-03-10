@@ -16,8 +16,10 @@ static void free_column(column_t *column, size_t rows)
         if (column->content_strings[i])
             free(column->content_strings[i]);
     }
+    free(column->content_strings);
     if (column->name)
         free(column->name);
+    free(column);
 }
 
 void df_free(dataframe_t *dataframe)
@@ -26,4 +28,6 @@ void df_free(dataframe_t *dataframe)
         return;
     for (size_t i = 0; i < dataframe->nb_columns; i++)
         free_column(dataframe->columns[i], dataframe->nb_rows);
+    free(dataframe->columns);
+    free(dataframe);
 }

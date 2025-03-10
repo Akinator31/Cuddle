@@ -20,7 +20,8 @@ OBJ_DEBUG = $(SRC:%.c=build-debug/%.o)
 OBJ_TEST = $(SRC_TEST:%.c=build-test/%.o)
 
 COMPILE_FLAGS = -Weverything -Wno-pointer-bool-conversion \
-				-Wno-unsafe-buffer-usage -Wno-unused-command-line-argument
+				-Wno-int-conversion -Wno-unused-command-line-argument \
+				-Wno-unsafe-buffer-usage -Wno-unknown-warning-option
 
 CFLAGS += 	-lm $(COMPILE_FLAGS) $(INCLUDE)
 

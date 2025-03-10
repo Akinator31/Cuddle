@@ -1,6 +1,6 @@
 coding-style-reports.log
 .vscode
-main.c
+src/main.c
 *.out
 *.a
 *.txt
