@@ -87,7 +87,7 @@ dataframe_t *resolve_types(dataframe_t *data)
 {
     for (size_t i = 0; i < data->nb_columns; i++) {
         identify_column_type(data->columns[i], data->nb_rows);
-        // change all types
+        fill_column_types(data->columns[i], &data->columns[i]->type, data->nb_rows);
     }
     return data;
 }
