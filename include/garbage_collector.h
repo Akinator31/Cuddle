@@ -20,6 +20,7 @@ void *my_realloc(void *ptr, size_t size, size_t old_size);
 void *my_reallocarray(void *ptr, size_t nmemb, size_t size);
 void free_garbage(void);
 char *my_strdup(const char *str);
+char *my_strndup(const char *str, size_t bytes);
 
 void collect_garbage(
     void *ptr,

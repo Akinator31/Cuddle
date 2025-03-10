@@ -6,6 +6,7 @@
 */
 
 #include "dataframe.h"
+#include <stdio.h>
 #include <sys/ucontext.h>
 
 int main(__attribute__((unused))int argc, char **argv)

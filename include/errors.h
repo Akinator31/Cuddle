@@ -10,11 +10,17 @@
 
     #include <stdio.h>
 
+
 enum error_codes {
-    NOT_CSV,
     BAD_LINE,
     EMPTY_FILE,
     UNEVEN_LINES,
+};
+
+    #define WARNINGS_START 100
+
+enum warning_codes {
+    NOT_CSV = WARNINGS_START,
 };
 
 void *write_error(

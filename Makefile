@@ -20,7 +20,7 @@ OBJ_DEBUG = $(SRC:%.c=build-debug/%.o)
 OBJ_TEST = $(SRC_TEST:%.c=build-test/%.o)
 
 COMPILE_FLAGS = -Weverything -Wno-pointer-bool-conversion \
-				-Wno-unsafe-buffer-usage
+				-Wno-unsafe-buffer-usage -Wno-unused-command-line-argument
 
 CFLAGS += 	-lm $(COMPILE_FLAGS) $(INCLUDE)
 
@@ -65,8 +65,7 @@ $(DEBUG_NAME): $(OBJ_DEBUG)
 run: $(OBJ)
 	@rm -f $(LIB_NAME)
 	@ar rc $(LIB_NAME) $(OBJ)
-	$(CC) src/main.c -o $(RUN_NAME) $(LIB_NAME) $(CFLAGS)
-	./$(RUN_NAME)
+	$(CC) src/main.c -o $(RUN_NAME) $(LIB_NAME) $(CFLAGS) -g -pg
 
 tests_run: $(OBJ_TEST)
 	@rm -f $(LIB_NAME)

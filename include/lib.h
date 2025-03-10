@@ -20,7 +20,12 @@ ssize_t getlinex(
     char **restrict lineptr,
     size_t *restrict n,
     FILE *restrict stream);
+
 char **line_to_row(
     const char *line,
-    const char *delimiters);
+    const char *delimiters,
+    size_t *rows_count);
+
+char *clean_str(char *str);
+
 #endif /* LIB_H */
