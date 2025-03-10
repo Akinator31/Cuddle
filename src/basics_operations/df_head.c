@@ -20,9 +20,11 @@ static void dump_column_content_from_head(
         return;
     if (!nb_rows)
         return;
-    for (size_t i = 0; i < (size_t)nb_rows; i++)
+    for (size_t i = 0; i < (size_t)nb_rows; i++) {
         column_dest->content_strings[i] =
             strdup(column_src->content_strings[i]);
+        column_dest->content[i] = column_src->content[i];
+    }
 }
 
 static column_t **dump_columns_from_head(
@@ -38,8 +40,10 @@ static column_t **dump_columns_from_head(
             return NULL;
         data[i]->name = strdup(df_src->columns[i]->name);
         data[i]->type = df_src->columns[i]->type;
+        data[i]->content = malloc(sizeof(column_content_t) * df_src->nb_rows);
         data[i]->content_strings = malloc(sizeof(char *) * df_src->nb_rows);
-        dump_column_content_from_head(df_src->columns[i], data[i], df_dest->nb_rows);
+        dump_column_content_from_head(df_src->columns[i],
+            data[i], df_dest->nb_rows);
         i++;
     }
     return data;
