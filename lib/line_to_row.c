@@ -32,12 +32,11 @@ static char *quote_strdup(
     size_t word_len = 0;
     bool quoted = false;
 
-#if defined(CSV_QUOTED_STRINGS)
-    if (string[0] == '"') {
-        word_len = strcspn(&string[1], "\"") + 2;
-        quoted = true;
-    }
-#endif
+    if (CSV_QUOTED_STRINGS)
+        if (string[0] == '"') {
+            word_len = strcspn(&string[1], "\"") + 2;
+            quoted = true;
+        }
     word_len += strcspn(&string[word_len - quoted], delimiters) - quoted;
     if (word_len == 0)
         return my_strdup("");

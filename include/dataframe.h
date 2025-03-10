@@ -11,7 +11,7 @@
     #include "cuddle.h"
 
     #include <stddef.h>
-#include <sys/types.h>
+    #include <sys/types.h>
 
 typedef enum {
     BOOL,
