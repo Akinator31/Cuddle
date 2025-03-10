@@ -5,6 +5,7 @@
 ** cuddle
 */
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -29,12 +30,14 @@ static char *quote_strdup(
     const char *delimiters)
 {
     size_t word_len = 0;
+    bool quoted = false;
 
-#if defined(CSV_QUOTED_STRINGS)
-    if (string[0] == '"')
-        word_len = strcspn(&string[1], "\"") + 2;
-#endif
-    word_len += strcspn(&string[word_len], delimiters);
+    if (CSV_QUOTED_STRINGS)
+        if (string[0] == '"') {
+            word_len = strcspn(&string[1], "\"") + 2;
+            quoted = true;
+        }
+    word_len += strcspn(&string[word_len - quoted], delimiters) - quoted;
     if (word_len == 0)
         return my_strdup("");
     return my_strndup(string, word_len);
@@ -50,9 +53,12 @@ char **line_to_row(
 
     max_words = count_delimiters(line, delimiters);
     row = my_calloc(max_words + 2, sizeof(char *));
-    for (*column_count = 0; *column_count < max_words + 1 && *line; (*column_count)++) {
+    for (*column_count = 0; *column_count < max_words + 1 && *line;
+        (*column_count)++) {
         row[*column_count] = quote_strdup(line, delimiters);
-        line = &line[strlen(row[*column_count]) + 1];
+        line = &line[strlen(row[*column_count])];
+        if (line[0] != '\0')
+            line++;
     }
     return row;
 }

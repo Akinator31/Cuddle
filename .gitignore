@@ -1,3 +1,11 @@
 coding-style-reports.log
 .vscode
 src/main.c
+*.out
+*.a
+*.txt
+*.csv
+.cache
+build*
+*.json
+cuddle

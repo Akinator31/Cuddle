@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <strings.h>
+#include "cuddle.h"
 #include "dataframe.h"
 #include "lib.h"
 
@@ -25,11 +26,11 @@ static bool is_float(char *string)
 
     if (string[0] == '-')
         string++;
-#ifndef CSV_DOTED_FLOATS
-    if (!isdigit(string[0]))
-        return false;
-    string++;
-#endif
+    if (CSV_DOTED_FLOATS) {
+        if (!isdigit(string[0]))
+            return false;
+        string++;
+    }
     for (size_t i = 0; isdigit(string[i]) || string[i] == '.'; i++)
         if (string[i] == '.')
             dot_count++;
@@ -52,9 +53,8 @@ static column_type_t identify_type(char *string)
 {
     char *clean_string = string;
 
-#ifdef CSV_SPACED_VALUE
-    clean_string = clean_str(string);
-#endif
+    if (CSV_SPACED_VALUE)
+        clean_string = clean_str(string);
     if (is_bool(clean_string))
         return BOOL;
     if (is_float(clean_string))
@@ -87,7 +87,8 @@ dataframe_t *resolve_types(dataframe_t *data)
 {
     for (size_t i = 0; i < data->nb_columns; i++) {
         identify_column_type(data->columns[i], data->nb_rows);
-        fill_column_types(data->columns[i], &data->columns[i]->type, data->nb_rows);
+        fill_column_types(data->columns[i],
+            &data->columns[i]->type, data->nb_rows);
     }
     return data;
 }
