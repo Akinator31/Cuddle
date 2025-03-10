@@ -11,7 +11,7 @@
 #include "dataframe.h"
 #include "utils.h"
 
-static void dump_column_content(
+static void dump_column_content_from_head(
     column_t *column_src,
     column_t *column_dest,
     size_t nb_rows)
@@ -25,7 +25,7 @@ static void dump_column_content(
             strdup(column_src->content_strings[i]);
 }
 
-static column_t **dump_columns(
+static column_t **dump_columns_from_head(
     dataframe_t *df_src,
     dataframe_t *df_dest)
 {
@@ -39,13 +39,13 @@ static column_t **dump_columns(
         data[i]->name = strdup(df_src->columns[i]->name);
         data[i]->type = df_src->columns[i]->type;
         data[i]->content_strings = malloc(sizeof(char *) * df_src->nb_rows);
-        dump_column_content(df_src->columns[i], data[i], df_dest->nb_rows);
+        dump_column_content_from_head(df_src->columns[i], data[i], df_dest->nb_rows);
         i++;
     }
     return data;
 }
 
-static dataframe_t *dump_dataframe(
+static dataframe_t *dump_dataframe_from_head(
     dataframe_t *df_src,
     size_t nb_rows)
 {
@@ -57,7 +57,7 @@ static dataframe_t *dump_dataframe(
     if (nb_rows > df_src->nb_rows)
         dataframe_size = df_src->nb_rows;
     new_dataframe = create_dataframe(dataframe_size, df_src->nb_columns);
-    new_dataframe->columns = dump_columns(df_src, new_dataframe);
+    new_dataframe->columns = dump_columns_from_head(df_src, new_dataframe);
     return new_dataframe;
 }
 
@@ -69,6 +69,6 @@ dataframe_t *df_head(
 
     if (!dataframe || nb_rows < 0)
         return NULL;
-    new_dataframe = dump_dataframe(dataframe, (size_t)nb_rows);
+    new_dataframe = dump_dataframe_from_head(dataframe, (size_t)nb_rows);
     return new_dataframe;
 }
