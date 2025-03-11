@@ -15,10 +15,16 @@ dataframe_t *create_dataframe(
     size_t nb_rows,
     size_t nb_columns);
 
-column_t *copy_column_content(
+column_t *copy_column_content_from_head(
     column_t *src,
     column_t *dest,
     size_t nb_rows);
+
+column_t *copy_column_content_from_tail(
+    column_t *src,
+    column_t *dest,
+    size_t nb_rows,
+    size_t total_rows);
 
 ssize_t find_column(
     const dataframe_t *data,
