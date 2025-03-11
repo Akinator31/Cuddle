@@ -24,7 +24,7 @@ dataframe_t *df_head(
         nb_rows = (int)dataframe->nb_rows;
     new_dataframe = create_dataframe((size_t)nb_rows, dataframe->nb_columns);
     for (size_t i = 0; i < dataframe->nb_columns; i++)
-        copy_column_content(&dataframe->columns[i],
+        copy_column_content_from_head(&dataframe->columns[i],
             &new_dataframe->columns[i], (size_t)nb_rows);
     return new_dataframe;
 }

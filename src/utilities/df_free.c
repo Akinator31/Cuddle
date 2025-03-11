@@ -16,6 +16,12 @@ void free_column(
 {
     if (!column)
         return;
+    for (size_t i = 0; i < rows; i++) {
+        if (column->content_strings[i])
+            free(column->content_strings[i]);
+    }
+    free(column->content_strings);
+    free(column->content);
     if (column->name)
         free(column->name);
     if (column->content)
