@@ -11,12 +11,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <stdbool.h>
 #include "cuddle.h"
 #include "dataframe.h"
 #include "errors.h"
 #include "lib.h"
 #include "utils.h"
+
+static void check_duplicate_column_names(char **names)
+{
+    for (size_t i = 0; names[i + 1]; i++)
+        if (str_in_array(names[i], &names[i + 1]))
+            write_error(DUPLICATE_COL_NAME, names[i], -1);
+}
 
 static dataframe_t *fill_dataframe(
     FILE *fptr,
@@ -34,6 +40,7 @@ static dataframe_t *fill_dataframe(
     data->nb_rows = 0;
     for (size_t i = 0; i < columns_count; i++)
         data->columns[i].name = strdup(line_content[i]);
+    check_duplicate_column_names(line_content);
     free_str_array(line_content);
     data->nb_columns = columns_count;
     free(content);
@@ -135,13 +142,13 @@ dataframe_t *df_read_csv(
 
     fptr = check_file(filename);
     if (!fptr)
-        return lib_exit();
+        return NULL;
     if (!separators || separators[0] == '\0')
         separators = ",";
     data = read_file(fptr, separators, filename);
     if (!data) {
         fclose(fptr);
-        return lib_exit();
+        return NULL;
     }
     resolve_types(data);
     fclose(fptr);
