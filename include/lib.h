@@ -10,11 +10,13 @@
 
     #include <stddef.h>
     #include <stdio.h>
+    #include <stdbool.h>
 
 char **str_to_word_array(const char *str, const char *delim);
 void print_str_array(char **array);
 size_t str_array_len(char **array);
 void *free_str_array(char **array);
+bool str_in_array(char *str, char **array);
 
 // getline wrapper to remove newline characters
 ssize_t getlinex(
