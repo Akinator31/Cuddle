@@ -50,7 +50,7 @@ dataframe_t *df_apply(
     if (col == -1)
         return write_error(COLUMN_NOT_FOUND, column, -1);
     for (size_t i = 0; i < data->nb_columns; i++)
-        copy_column_content(&data->columns[i],
+        copy_column_content_from_head(&data->columns[i],
             &new_data->columns[i], data->nb_rows);
     apply_to_column(&(new_data->columns[col]), apply_func, data->nb_rows);
     new_data->nb_rows = data->nb_rows;
