@@ -14,3 +14,8 @@ void free_garbage(void)
 {
     collect_garbage(NULL, NULL, FREE_MODE);
 }
+
+void forget_garbage(void)
+{
+    collect_garbage(NULL, NULL, FORGET_MODE);
+}

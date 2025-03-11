@@ -6,16 +6,11 @@
 */
 
 #include "dataframe.h"
-#include <stdio.h>
-#include <sys/ucontext.h>
 
-int main(__attribute__((unused))int argc, char **argv)
+int main(__attribute__((unused)) int argc, char **argv)
 {
     dataframe_t *data = df_read_csv(argv[1], ",");
 
-    if (!data)
-        return 84;
-    df_write_csv(data, argv[2]);
     df_free(data);
     return 0;
 }

@@ -5,22 +5,22 @@
 ** fill_column_types.c
 */
 
-#include "dataframe.h"
-#include "garbage_collector.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "dataframe.h"
+#include "utils.h"
 
 static column_t *fill_bool(
     column_t *column,
     size_t nb_rows)
 {
+    column->content = malloc(sizeof(bool) * nb_rows);
     for (size_t i = 0; i < nb_rows; i++) {
-        column->content[i] = my_malloc(sizeof(column_type_t));
         if (tolower(column->content_strings[i][0]) == 'f')
-            column->content[i]->boolean = false;
+            ((bool *)(column->content))[i] = false;
         else
-            column->content[i]->boolean = true;
+            ((bool *)(column->content))[i] = true;
     }
     return column;
 }
@@ -29,42 +29,40 @@ static column_t *fill_float(
     column_t *column,
     size_t nb_rows)
 {
+    column->content = malloc(sizeof(double) * nb_rows);
     for (size_t i = 0; i < nb_rows; i++) {
-        column->content[i] = my_malloc(sizeof(column_type_t));
-        column->content[i]->floating_point = atof(column->content_strings[i]);
+        ((double *)(column->content))[i] = atof(column->content_strings[i]);
     }
     return column;
 }
 
 static column_t *fill_int(
     column_t *column,
-    size_t nb_rows,
-    bool *negative)
+    size_t nb_rows)
 {
+    bool negative = false;
+
+    column->content = malloc(sizeof(int) * nb_rows);
     for (size_t i = 0; i < nb_rows; i++) {
-        column->content[i] = my_malloc(sizeof(column_type_t));
-        column->content[i]->integer = atoi(column->content_strings[i]);
-        if (column->content[i]->integer < 0)
-            *negative = true;
+        ((int *)(column->content))[i] = atoi(column->content_strings[i]);
+        if (((int *)(column->content))[i] >> 7)
+            negative = true;
     }
+    if (!negative)
+        column->type = UINT;
     return column;
 }
 
 column_t *fill_column_types(
     column_t *column,
-    column_type_t *type,
+    column_type_t type,
     size_t nb_rows)
 {
-    bool negative = false;
-
-    column->content = my_malloc(sizeof(column_type_t *) * nb_rows);
-    if (*type == BOOL)
-        fill_bool(column, nb_rows);
-    if (*type == INT)
-        fill_int(column, nb_rows, &negative);
-    if (*type == FLOAT)
-        fill_float(column, nb_rows);
-    if (!negative)
-        *type = UINT;
+    if (type == BOOL)
+        return fill_bool(column, nb_rows);
+    if (type == INT)
+        return fill_int(column, nb_rows);
+    if (type == FLOAT)
+        return fill_float(column, nb_rows);
     return column;
 }

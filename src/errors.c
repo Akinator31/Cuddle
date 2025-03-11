@@ -13,8 +13,9 @@
 
 // dissociate warnings and errors to add colors
 static const char *const error_strings[] = {"Incorrect line",
-    "File is empty", "File columns are uneven"};
-static const char *const warning_strings[] = {"Not a csv file"};
+    "File is empty", "File columns are uneven", "Column not found"};
+static const char *const warning_strings[] = {"Not a csv file",
+    "Duplicate column name"};
 
 void *write_error(
     int error_code,
@@ -36,6 +37,12 @@ void *write_error(
         printf("%ld:", number);
     printf(" %s\033[0m\n", string);
     return NULL;
+}
+
+void *lib_finish(void *ptr)
+{
+    forget_garbage();
+    return ptr;
 }
 
 void *lib_exit(void)

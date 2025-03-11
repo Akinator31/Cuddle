@@ -67,6 +67,8 @@ void collect_garbage(
         modify_garbage_ptr(garbage_array, old_ptr, ptr, garbage_size);
     if (mode == FREE_MODE)
         free_garbage_array(garbage_array, garbage_size);
+    if (mode == FORGET_MODE)
+        free(garbage_array);
 }
 
 void *my_malloc(size_t bytes)

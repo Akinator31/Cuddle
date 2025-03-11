@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "garbage_collector.h"
 #include "lib.h"
@@ -39,10 +40,11 @@ static char *quote_strdup(
         }
     word_len += strcspn(&string[word_len - quoted], delimiters) - quoted;
     if (word_len == 0)
-        return my_strdup("");
-    return my_strndup(string, word_len);
+        return strdup("");
+    return strndup(string, word_len);
 }
 
+// switch to some kind of custom strtok with no memory allocation
 char **line_to_row(
     const char *line,
     const char *delimiters,
@@ -52,7 +54,7 @@ char **line_to_row(
     size_t max_words = 0;
 
     max_words = count_delimiters(line, delimiters);
-    row = my_calloc(max_words + 2, sizeof(char *));
+    row = calloc(max_words + 2, sizeof(char *));
     for (*column_count = 0; *column_count < max_words + 1 && *line;
         (*column_count)++) {
         row[*column_count] = quote_strdup(line, delimiters);
