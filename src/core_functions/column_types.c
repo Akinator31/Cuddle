@@ -11,6 +11,7 @@
 #include "cuddle.h"
 #include "dataframe.h"
 #include "lib.h"
+#include "utils.h"
 
 static bool is_bool(char *string)
 {
@@ -71,9 +72,9 @@ static column_type_t identify_column_type(
     column_type_t estimated_type = UNDEFINED;
     column_type_t current_type = UNDEFINED;
 
-    estimated_type = identify_type(column->content_strings[0]);
+    estimated_type = identify_type((*column).content_strings[0]);
     for (size_t i = 1; i < rows; i++) {
-        current_type = identify_type(column->content_strings[i]);
+        current_type = identify_type((*column).content_strings[i]);
         if (current_type != estimated_type) {
             estimated_type = STRING;
             break;
@@ -86,9 +87,9 @@ static column_type_t identify_column_type(
 dataframe_t *resolve_types(dataframe_t *data)
 {
     for (size_t i = 0; i < data->nb_columns; i++) {
-        identify_column_type(data->columns[i], data->nb_rows);
-        fill_column_types(data->columns[i],
-            &data->columns[i]->type, data->nb_rows);
+        identify_column_type(&data->columns[i], data->nb_rows);
+        fill_column_types(&data->columns[i],
+            data->columns[i].type, data->nb_rows);
     }
     return data;
 }

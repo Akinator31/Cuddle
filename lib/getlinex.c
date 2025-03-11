@@ -12,10 +12,10 @@
 
 ssize_t getlinex(
     char **restrict lineptr,
-    size_t *restrict n,
     FILE *restrict stream)
 {
-    ssize_t result = getline(lineptr, n, stream);
+    size_t n = 0;
+    ssize_t result = getline(lineptr, &n, stream);
 
     if (result == -1)
         return -1;
