@@ -14,8 +14,9 @@ void df_info(dataframe_t *data)
     if (!data)
         return;
     printf("%lu columns:\n", data->nb_columns);
-    for (size_t i = 0; i < data->nb_columns; i++) {
+    for (size_t i = 0; i < data->nb_columns - 1; i++)
         printf("- %s: %s\n",
             data->columns[i].name, type_to_str(data->columns[i].type));
-    }
+    printf("- %s: %s", data->columns[data->nb_columns - 1].name,
+        type_to_str(data->columns[data->nb_columns - 1].type));
 }
