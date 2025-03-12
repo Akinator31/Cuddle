@@ -30,7 +30,7 @@ void *df_get_value(
     int row,
     const char *column)
 {
-    if (!dataframe || !column || row <= 0 || row > dataframe->nb_rows)
+    if (!dataframe || !column || row <= 0 || (size_t)row > dataframe->nb_rows)
         return NULL;
     row--;
     for (size_t i = 0; i < dataframe->nb_columns; i++) {
