@@ -50,4 +50,8 @@ void free_all_columns(
     size_t rows,
     size_t cols);
 
+void *retrieve_data_from_column(
+    column_t *column,
+    size_t row);
+
 #endif
