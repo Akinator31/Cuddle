@@ -50,4 +50,6 @@ void free_all_columns(
     size_t rows,
     size_t cols);
 
+char *type_to_str(column_type_t type);
+
 #endif
