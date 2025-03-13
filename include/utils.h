@@ -53,5 +53,6 @@ void free_all_columns(
 void *retrieve_data_from_column(
     column_t *column,
     size_t row);
+char *type_to_str(column_type_t type);
 
 #endif
