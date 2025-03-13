@@ -40,12 +40,11 @@ column_t *copy_column_content_from_tail(
 
     dest->type = src->type;
     dest->name = strdup(src->name);
-    if (src->type == STRING) {
-        for (size_t i = 0; i < nb_rows; i++)
-            dest->content_strings[i] =
-            strdup(src->content_strings[total_rows - nb_rows + i]);
+    for (size_t i = 0; i < nb_rows; i++)
+        dest->content_strings[i] =
+        strdup(src->content_strings[total_rows - nb_rows + i]);
+    if (src->type == STRING)
         return dest;
-    }
     dest->content = malloc(total_content_size);
     memcpy(dest->content, (char *)src->content + content_size(src->type)
         * (total_rows - nb_rows), total_content_size);
