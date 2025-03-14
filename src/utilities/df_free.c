@@ -50,6 +50,8 @@ void df_free_safe(dataframe_t *data)
     for (size_t i = 0; i < data->nb_columns; i++)
         free_column(&data->columns[i], data->nb_rows);
     free(data->columns);
+    if (data->delimiter)
+        free(data->delimiter);
     free(data);
 }
 
@@ -59,5 +61,6 @@ void df_free(dataframe_t *data)
         return;
     free_all_columns(data->columns, data->nb_rows, data->nb_columns);
     free(data->columns);
+    free(data->delimiter);
     free(data);
 }

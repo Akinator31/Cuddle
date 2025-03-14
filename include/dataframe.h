@@ -33,6 +33,7 @@ typedef struct dataframe_s {
     size_t nb_rows;
     size_t nb_columns;
     column_t *columns;
+    char *delimiter;
 } dataframe_t;
 
 typedef struct dataframe_shape_s {
@@ -59,7 +60,7 @@ dataframe_t *df_tail(
     dataframe_t *dataframe,
     int nb_rows)
 __attribute__((nonnull(1)));
-dataframe_shape_t *df_shape(
+dataframe_shape_t df_shape(
     dataframe_t *dataframe)
 __attribute__((nonnull(1)));
 void df_info(

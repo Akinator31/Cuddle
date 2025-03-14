@@ -15,12 +15,10 @@ char *type_to_str(column_type_t type)
     if (type == INT)
         return "int";
     if (type == UINT)
-        return "uint";
+        return "unsigned integer";
     if (type == FLOAT)
         return "float";
     if (type == STRING)
         return "string";
-    if (type == UNDEFINED)
-        return "undefined";
     return NULL;
 }

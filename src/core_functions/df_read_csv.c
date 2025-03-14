@@ -151,6 +151,7 @@ dataframe_t *df_read_csv(
         return NULL;
     }
     resolve_types(data);
+    data->delimiter = strdup(separators);
     fclose(fptr);
     return data;
 }

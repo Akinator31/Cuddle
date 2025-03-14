@@ -31,5 +31,6 @@ dataframe_t *create_dataframe(size_t nb_rows, size_t nb_columns)
     dataframe->nb_rows = nb_rows;
     dataframe->nb_columns = nb_columns;
     dataframe->columns = create_columns(nb_columns, nb_rows);
+    dataframe->delimiter = NULL;
     return dataframe;
 }
