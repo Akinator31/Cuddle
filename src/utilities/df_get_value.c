@@ -15,6 +15,7 @@ void *df_get_value(
     const char *column)
 {
     size_t row = (size_t)int_row;
+
     if (!dataframe || !column || row <= 0 || row > dataframe->nb_rows)
         return NULL;
     row--;

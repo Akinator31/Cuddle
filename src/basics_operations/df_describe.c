@@ -5,30 +5,78 @@
 ** df_describe.c
 */
 
+#include <math.h>
+#include <stdlib.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <float.h>
 #include "dataframe.h"
-#include "utils.h"
 
-static void get_column_data(column_t *column, double data[4], size_t nb_rows)
+static void is_min_or_max(
+    double number,
+    double min_max[2])
 {
-    for (size_t i = 0; i < nb_rows; i++) {
-        printf("%f\n", data[0]);
-    }
-    data[0] /= (double)nb_rows;
-    return;
+    if (number < min_max[0])
+        min_max[0] = number;
+    if (number > min_max[1])
+        min_max[1] = number;
 }
 
-static void describe_column(column_t *column, size_t nb_rows)
+static double get_column_mean(
+    column_t *column,
+    size_t nb_rows,
+    double min_max[2])
 {
-    double data[4] = {0};
+    double tmp = 0;
+    double mean = 0;
 
-    get_column_data(column, data, nb_rows);
+    for (size_t i = 0; i < nb_rows; i++) {
+        if (column->type == INT)
+            tmp = ((int *)(column->content))[i];
+        if (column->type == UINT)
+            tmp = ((uint *)(column->content))[i];
+        if (column->type == FLOAT)
+            tmp = ((double *)(column->content))[i];
+        is_min_or_max(tmp, min_max);
+        mean += tmp;
+    }
+    return mean / (double)nb_rows;
+}
+
+static double get_column_std(
+    column_t *column,
+    double mean,
+    size_t nb_rows)
+{
+    double std = 0;
+
+    for (size_t i = 0; i < nb_rows; i++) {
+        if (column->type == INT)
+            std += round(pow(fabs(((int *)(column->content))[i] - mean), 2));
+        if (column->type == UINT)
+            std += pow(fabs(((uint *)(column->content))[i] - mean), 2);
+        if (column->type == FLOAT)
+            std += pow(fabs(((double *)(column->content))[i] - mean), 2);
+    }
+    return sqrt(std / (double)nb_rows);
+}
+
+static void describe_column(
+    column_t *column,
+    size_t nb_rows)
+{
+    double min_and_max[2] = {DBL_MAX, DBL_MIN};
+    double mean = get_column_mean(column, nb_rows, min_and_max);
+    double std = get_column_std(column, mean, nb_rows);
+
     printf(
         "Column: %s\n"
         "Count: %lu\n"
-        "Mean: %f\n",
-        column->name, nb_rows, data[0]);
+        "Mean: %.2f\n"
+        "Std: %.2f\n"
+        "Min: %.2f\n"
+        "Max: %.2f\n",
+        column->name, nb_rows, mean, std, min_and_max[0], min_and_max[1]);
     return;
 }
 
