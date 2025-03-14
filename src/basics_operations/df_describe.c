@@ -52,7 +52,7 @@ static double get_column_std(
 
     for (size_t i = 0; i < nb_rows; i++) {
         if (column->type == INT)
-            std += round(pow(fabs(((int *)(column->content))[i] - mean), 2));
+            std += pow(fabs(((int *)(column->content))[i] - mean), 2);
         if (column->type == UINT)
             std += pow(fabs(((uint *)(column->content))[i] - mean), 2);
         if (column->type == FLOAT)
