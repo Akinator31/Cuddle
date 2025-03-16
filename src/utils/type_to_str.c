@@ -15,7 +15,7 @@ char *type_to_str(column_type_t type)
     if (type == INT)
         return "int";
     if (type == UINT)
-        return "unsigned integer";
+        return "unsigned int";
     if (type == FLOAT)
         return "float";
     if (type == STRING)
