@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #include "dataframe.h"
 #include "garbage_collector.h"
 #include "utils.h"
@@ -24,13 +25,13 @@ static column_t *create_columns(size_t nb_columns, size_t nb_rows)
     return column_list;
 }
 
-dataframe_t *create_dataframe(size_t nb_rows, size_t nb_columns)
+dataframe_t *create_dataframe(size_t nb_rows, size_t nb_columns, char *delim)
 {
     dataframe_t *dataframe = my_malloc(sizeof(dataframe_t));
 
     dataframe->nb_rows = nb_rows;
     dataframe->nb_columns = nb_columns;
     dataframe->columns = create_columns(nb_columns, nb_rows);
-    dataframe->delimiter = NULL;
+    dataframe->delimiter = strdup(delim);
     return dataframe;
 }

@@ -36,7 +36,7 @@ static dataframe_t *fill_dataframe(
     if (getlinex(&content, fptr) == -1 || !content)
         return write_error(BAD_LINE, EMPTY_STRING, 1);
     line_content = line_to_row(content, separators, &columns_count);
-    data = create_dataframe(32, columns_count);
+    data = create_dataframe(32, columns_count, (char *)separators);
     data->nb_rows = 0;
     for (size_t i = 0; i < columns_count; i++)
         data->columns[i].name = strdup(line_content[i]);
@@ -151,7 +151,6 @@ dataframe_t *df_read_csv(
         return NULL;
     }
     resolve_types(data);
-    data->delimiter = strdup(separators);
     fclose(fptr);
     return data;
 }

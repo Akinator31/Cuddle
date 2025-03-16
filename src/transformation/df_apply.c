@@ -45,7 +45,7 @@ dataframe_t *df_apply(
     dataframe_t *new_data = NULL;
     ssize_t col = 0;
 
-    new_data = create_dataframe(data->nb_rows, data->nb_columns);
+    new_data = create_dataframe(data->nb_rows, data->nb_columns, data->delimiter);
     col = find_column(data, column);
     if (col == -1)
         return write_error(COLUMN_NOT_FOUND, column, -1);

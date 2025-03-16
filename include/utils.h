@@ -13,7 +13,8 @@
 
 dataframe_t *create_dataframe(
     size_t nb_rows,
-    size_t nb_columns);
+    size_t nb_columns,
+    char *delim);
 
 column_t *copy_column_content_from_head(
     column_t *src,

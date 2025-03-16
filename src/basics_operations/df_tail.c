@@ -20,7 +20,7 @@ dataframe_t *df_tail(
         return NULL;
     if ((size_t)nb_rows > dataframe->nb_rows)
         nb_rows = (int)dataframe->nb_rows;
-    new_dataframe = create_dataframe((size_t)nb_rows, dataframe->nb_columns);
+    new_dataframe = create_dataframe((size_t)nb_rows, dataframe->nb_columns, dataframe->delimiter);
     for (size_t i = 0; i < dataframe->nb_columns; i++)
         copy_column_content_from_tail(&dataframe->columns[i],
             &new_dataframe->columns[i], (size_t)nb_rows, dataframe->nb_rows);
