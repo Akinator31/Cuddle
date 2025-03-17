@@ -31,6 +31,24 @@ static bool filter_row(
     return result;
 }
 
+static dataframe_t *filter_rows(
+    dataframe_t *data,
+    dataframe_t *new,
+    bool (*filter_func)(void *),
+    ssize_t col)
+{
+    size_t current_row = 0;
+
+    for (size_t i = 0; i < data->nb_rows; i++)
+        if (filter_row(data->columns[col].content, i, filter_func,
+            data->columns[col].type)) {
+            copy_row(data, new, i, current_row);
+            current_row++;
+            }
+    new->nb_rows = current_row;
+    return new;
+}
+
 dataframe_t *df_filter(
     dataframe_t *data,
     const char *column,
@@ -38,8 +56,9 @@ dataframe_t *df_filter(
 {
     dataframe_t *new = NULL;
     ssize_t col = 0;
-    size_t current_row = 0;
 
+    if (!data)
+        return NULL;
     new = create_dataframe(data->nb_rows, data->nb_columns, data->delimiter);
     for (size_t i = 0; i < data->nb_columns; i++) {
         new->columns[i].content = malloc(sizeof(void *) * data->nb_rows);
@@ -48,12 +67,6 @@ dataframe_t *df_filter(
     col = find_column(data, column);
     if (col == -1)
         return write_error(COLUMN_NOT_FOUND, column, -1);
-    for (size_t i = 0; i < data->nb_rows; i++)
-        if (filter_row(data->columns[col].content, i, filter_func,
-            data->columns[col].type)) {
-            copy_row(data, new, i, current_row);
-            current_row++;
-            }
-    new->nb_rows = current_row;
+    filter_rows(data, new, filter_func, col);
     return new;
 }
