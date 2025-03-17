@@ -27,6 +27,12 @@ column_t *copy_column_content_from_tail(
     size_t nb_rows,
     size_t total_rows);
 
+dataframe_t *copy_row(
+    dataframe_t *src,
+    dataframe_t *dest,
+    size_t row_src,
+    size_t row_dest);
+
 ssize_t find_column(
     const dataframe_t *data,
     const char *column_name);

@@ -50,3 +50,25 @@ column_t *copy_column_content_from_tail(
         * (total_rows - nb_rows), total_content_size);
     return dest;
 }
+
+dataframe_t *copy_row(
+    dataframe_t *src,
+    dataframe_t *dest,
+    size_t row_src,
+    size_t row_dest)
+{
+    for (size_t i = 0; i < src->nb_columns; i++) {
+        dest->columns[i].content_strings[row_dest] =
+            strdup(src->columns[i].content_strings[row_src]);
+        if (src->columns[i].type == INT || src->columns[i].type == UINT)
+            ((int *)(dest->columns[i].content))[row_dest] =
+                ((int *)(src->columns[i].content))[row_src];
+        if (src->columns[i].type == FLOAT)
+            ((double *)(dest->columns[i].content))[row_dest] =
+                ((double *)(src->columns[i].content))[row_src];
+        if (src->columns[i].type == BOOL)
+            ((bool *)(dest->columns[i].content))[row_dest] =
+                ((bool *)(src->columns[i].content))[row_src];
+    }
+    return dest;
+}
