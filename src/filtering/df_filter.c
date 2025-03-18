@@ -22,8 +22,6 @@ static bool filter_row(
 
     if (type == INT || type == UINT)
         result = filter_func(&((int *)(content))[current_row]);
-    if (type == STRING)
-        result = filter_func(&((char *)(content))[current_row]);
     if (type == BOOL)
         result = filter_func(&((bool *)(content))[current_row]);
     if (type == FLOAT)
@@ -38,13 +36,19 @@ static dataframe_t *filter_rows(
     ssize_t col)
 {
     size_t current_row = 0;
+    bool result = false;
+    column_t column = data->columns[col];
 
-    for (size_t i = 0; i < data->nb_rows; i++)
-        if (filter_row(data->columns[col].content, i, filter_func,
-            data->columns[col].type)) {
+    for (size_t i = 0; i < data->nb_rows; i++) {
+        if (column.type == STRING)
+            result = filter_func(column.content_strings[i]);
+        else
+            result = filter_row(column.content, i, filter_func, column.type);
+        if (result) {
             copy_row(data, new, i, current_row);
             current_row++;
             }
+    }
     new->nb_rows = current_row;
     return new;
 }
