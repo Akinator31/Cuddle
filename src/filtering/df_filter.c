@@ -63,14 +63,14 @@ dataframe_t *df_filter(
 
     if (!data)
         return NULL;
+    col = find_column(data, column);
+    if (col == -1)
+        return write_error(COLUMN_NOT_FOUND, column, -1);
     new = create_dataframe(data->nb_rows, data->nb_columns, data->delimiter);
     for (size_t i = 0; i < data->nb_columns; i++) {
         new->columns[i].content = malloc(sizeof(void *) * data->nb_rows);
         new->columns[i].name = strdup(data->columns[i].name);
     }
-    col = find_column(data, column);
-    if (col == -1)
-        return write_error(COLUMN_NOT_FOUND, column, -1);
     filter_rows(data, new, filter_func, col);
     return new;
 }
