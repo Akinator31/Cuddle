@@ -13,28 +13,32 @@
 #include "errors.h"
 #include "utils.h"
 
+// #Todo: split the function
 static column_t *apply_to_column(
-    column_t *column_ptr,
-    void *(*apply_func)(void *value),
+    column_t *column,
+    void *(*func)(void *value),
     size_t nb_rows)
 {
-    column_t column = *column_ptr;
+    void *content = column->content;
 
     for (size_t i = 0; i < nb_rows; i++) {
-        if (column.type == INT || column.type == UINT)
-            ((int *)(column.content))[i] =
-                *(int *)apply_func(&((int *)(column.content))[i]);
-        if (column.type == FLOAT)
-            ((double *)(column.content))[i] =
-                *(double *)apply_func(&((double *)(column.content))[i]);
-        if (column.type == BOOL)
-            ((bool *)(column.content))[i] =
-                *(bool *)apply_func(&((bool *)(column.content))[i]);
-        if (column.type == STRING)
-            ((char *)(column.content))[i] =
-                *(char *)apply_func(&((char *)(column.content))[i]);
+        if (column->type == INT || column->type == UINT)
+            ((int *)(content))[i] = *(int *)func(&((int *)(content))[i]);
+        if (column->type == FLOAT)
+            ((double *)(content))[i] =
+                *(double *)func(&((double *)(content))[i]);
+        if (column->type == BOOL)
+            ((bool *)(content))[i] = *(bool *)func(&((bool *)(content))[i]);
+        if (column->type == STRING)
+            column->content_strings[i] =
+                (char *)func(column->content_strings[i]);
+        if (column->type != STRING) {
+            free(column->content_strings[i]);
+            column->content_strings[i] =
+                strdup(content_to_str(column->content, column->type));
+        }
     }
-    return column_ptr;
+    return column;
 }
 
 dataframe_t *df_apply(
