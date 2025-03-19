@@ -16,6 +16,7 @@ enum error_codes {
     EMPTY_FILE,
     UNEVEN_LINES,
     COLUMN_NOT_FOUND,
+    BAD_DOWNCAST,
 };
 
     #define WARNINGS_START 100

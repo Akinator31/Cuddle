@@ -50,7 +50,7 @@ static bool is_int(char *string)
     return true;
 }
 
-static column_type_t identify_type(char *string)
+column_type_t identify_type(char *string)
 {
     char *clean_string = string;
 

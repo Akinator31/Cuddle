@@ -49,14 +49,12 @@ dataframe_t *df_apply(
     dataframe_t *new_data = NULL;
     ssize_t col = 0;
 
-    new_data = create_dataframe(data->nb_rows,
-        data->nb_columns, data->delimiter);
     col = find_column(data, column);
     if (col == -1)
         return write_error(COLUMN_NOT_FOUND, column, -1);
-    for (size_t i = 0; i < data->nb_columns; i++)
-        copy_column_content_from_head(&data->columns[i],
-            &new_data->columns[i], data->nb_rows);
+    new_data = create_dataframe(data->nb_rows,
+        data->nb_columns, data->delimiter);
+    copy_columns(data, new_data);
     apply_to_column(&(new_data->columns[col]), apply_func, data->nb_rows);
     new_data->nb_rows = data->nb_rows;
     new_data->nb_columns = data->nb_columns;

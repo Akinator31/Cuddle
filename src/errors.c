@@ -11,9 +11,9 @@
 #include "garbage_collector.h"
 #include "errors.h"
 
-// dissociate warnings and errors to add colors
 static const char *const error_strings[] = {"Incorrect line",
-    "File is empty", "File columns are uneven", "Column not found"};
+    "File is empty", "File columns are uneven", "Column not found",
+    "Bad downcast, can't change type"};
 static const char *const warning_strings[] = {"Not a csv file",
     "Duplicate column name"};
 
