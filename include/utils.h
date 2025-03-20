@@ -47,6 +47,11 @@ column_t *fill_column_types(
 
 uint8_t content_size(column_type_t type);
 
+void apply_sorting_mask_for_all_columns(
+    size_t index,
+    size_t min_index,
+    dataframe_t *dataframe);
+
 // Free related
 void df_free_safe(dataframe_t *data);
 void free_column(
