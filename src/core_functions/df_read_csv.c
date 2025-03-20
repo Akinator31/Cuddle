@@ -99,6 +99,8 @@ static dataframe_t *read_file(
     if (!data)
         return NULL;
     while (getlinex(&content, fptr) != -1 && content) {
+        if (content[0] == '\0')
+            continue;
         line_content = line_to_row(content, separators, &column_count);
         if (!fill_columns(line_content, data, filename, column_count)) {
             check_content(content);
