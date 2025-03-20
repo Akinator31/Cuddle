@@ -22,12 +22,14 @@ static column_t *apply_downcast(
         if (downcast == INT || downcast == UINT)
             ((int *)(column->content))[i] = atoi(column->content_strings[i]);
         if (downcast == FLOAT)
-            ((double *)(column->content))[i] = atof(column->content_strings[i]);
+            ((double *)(column->content))[i] =
+                atof(column->content_strings[i]);
         if (downcast == BOOL)
             ((bool *)(column->content))[i] = column->content_strings[i];
         if (column->type != STRING) {
             free(column->content_strings[i]);
-            column->content_strings[i] = content_to_str(column->content, column->type);
+            column->content_strings[i] =
+                content_to_str(column->content, column->type);
         }
     }
     return column;
