@@ -72,3 +72,14 @@ dataframe_t *copy_row(
     }
     return dest;
 }
+
+dataframe_t *copy_columns(
+    dataframe_t *src,
+    dataframe_t *dest)
+{
+    for (size_t i = 0; i < dest->nb_columns; i++) {
+        copy_column_content_from_head(&src->columns[i],
+            &dest->columns[i], dest->nb_rows);
+    }
+    return dest;
+}

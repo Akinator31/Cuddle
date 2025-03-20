@@ -13,28 +13,32 @@
 #include "errors.h"
 #include "utils.h"
 
+// #Todo: split the function
 static column_t *apply_to_column(
-    column_t *column_ptr,
-    void *(*apply_func)(void *value),
+    column_t *column,
+    void *(*func)(void *value),
     size_t nb_rows)
 {
-    column_t column = *column_ptr;
+    void *content = column->content;
 
     for (size_t i = 0; i < nb_rows; i++) {
-        if (column.type == INT || column.type == UINT)
-            ((int *)(column.content))[i] =
-                *(int *)apply_func(&((int *)(column.content))[i]);
-        if (column.type == FLOAT)
-            ((double *)(column.content))[i] =
-                *(double *)apply_func(&((double *)(column.content))[i]);
-        if (column.type == BOOL)
-            ((bool *)(column.content))[i] =
-                *(bool *)apply_func(&((bool *)(column.content))[i]);
-        if (column.type == STRING)
-            ((char *)(column.content))[i] =
-                *(char *)apply_func(&((char *)(column.content))[i]);
+        if (column->type == INT || column->type == UINT)
+            ((int *)(content))[i] = *(int *)func(&((int *)(content))[i]);
+        if (column->type == FLOAT)
+            ((double *)(content))[i] =
+                *(double *)func(&((double *)(content))[i]);
+        if (column->type == BOOL)
+            ((bool *)(content))[i] = *(bool *)func(&((bool *)(content))[i]);
+        if (column->type == STRING)
+            column->content_strings[i] =
+                (char *)func(column->content_strings[i]);
+        if (column->type != STRING) {
+            free(column->content_strings[i]);
+            column->content_strings[i] =
+                strdup(content_to_str(column->content, column->type));
+        }
     }
-    return column_ptr;
+    return column;
 }
 
 dataframe_t *df_apply(
@@ -45,14 +49,12 @@ dataframe_t *df_apply(
     dataframe_t *new_data = NULL;
     ssize_t col = 0;
 
-    new_data = create_dataframe(data->nb_rows,
-        data->nb_columns, data->delimiter);
     col = find_column(data, column);
     if (col == -1)
         return write_error(COLUMN_NOT_FOUND, column, -1);
-    for (size_t i = 0; i < data->nb_columns; i++)
-        copy_column_content_from_head(&data->columns[i],
-            &new_data->columns[i], data->nb_rows);
+    new_data = create_dataframe(data->nb_rows,
+        data->nb_columns, data->delimiter);
+    copy_columns(data, new_data);
     apply_to_column(&(new_data->columns[col]), apply_func, data->nb_rows);
     new_data->nb_rows = data->nb_rows;
     new_data->nb_columns = data->nb_columns;

@@ -16,12 +16,9 @@ static column_t *fill_bool(
     size_t nb_rows)
 {
     column->content = malloc(sizeof(bool) * nb_rows);
-    for (size_t i = 0; i < nb_rows; i++) {
-        if (tolower(column->content_strings[i][0]) == 'f')
-            ((bool *)(column->content))[i] = false;
-        else
-            ((bool *)(column->content))[i] = true;
-    }
+    for (size_t i = 0; i < nb_rows; i++)
+        ((bool *)(column->content))[i] =
+            tolower(column->content_strings[i][0]) == 't';
     return column;
 }
 

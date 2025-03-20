@@ -85,27 +85,41 @@ static void check_content(char *content)
         free(content);
 }
 
+static dataframe_t *convert_and_fill(
+    char *content,
+    const char *separators,
+    dataframe_t *data,
+    const char *filename)
+{
+    size_t column_count = 0;
+    char **line_content = NULL;
+
+    line_content = line_to_row(content, separators, &column_count);
+    if (!fill_columns(line_content, data, filename, column_count)) {
+        check_content(content);
+        return free_str_array(line_content);
+    }
+    free_str_array(line_content);
+    return data;
+}
+
 static dataframe_t *read_file(
     FILE *fptr,
     const char *separators,
     const char *filename)
 {
     char *content = NULL;
-    char **line_content = NULL;
     dataframe_t *data = NULL;
-    size_t column_count = 0;
 
     data = fill_dataframe(fptr, separators);
     if (!data)
         return NULL;
     while (getlinex(&content, fptr) != -1 && content) {
-        line_content = line_to_row(content, separators, &column_count);
-        if (!fill_columns(line_content, data, filename, column_count)) {
-            check_content(content);
-            return free_str_array(line_content);
-        }
+        if (content[0] == '\0')
+            continue;
+        if (!convert_and_fill(content, separators, data, filename))
+            return NULL;
         data->nb_rows++;
-        free_str_array(line_content);
         check_content(content);
     }
     check_content(content);
