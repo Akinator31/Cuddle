@@ -52,11 +52,11 @@ static double get_column_std(
 
     for (size_t i = 0; i < nb_rows; i++) {
         if (column->type == INT)
-            std += pow(fabs(((int *)(column->content))[i] - mean), 2);
+            std += pow(((int *)(column->content))[i] - mean, 2);
         if (column->type == UINT)
-            std += pow(fabs(((uint *)(column->content))[i] - mean), 2);
+            std += pow(((uint *)(column->content))[i] - mean, 2);
         if (column->type == FLOAT)
-            std += pow(fabs(((double *)(column->content))[i] - mean), 2);
+            std += pow(((double *)(column->content))[i] - mean, 2);
     }
     return sqrt(std / (double)nb_rows);
 }
