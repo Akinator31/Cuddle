@@ -7,14 +7,25 @@
 
 #include "dataframe.h"
 #include <stdio.h>
+#include "utils.h"
 
 dataframe_t *df_groupby(
     dataframe_t *data,
-    __attribute__((unused))const char *aggregate_by,
-    __attribute__((unused))const char **to_aggregate,
+    const char *aggregate_by,
+    const char **to_aggregate,
     void *(*agg_func)(void **values, int nb_values))
 {
-    if (!data || !agg_func)
+    ssize_t col_nb = 0;
+
+    if (!data || !aggregate_by || !to_aggregate || !agg_func)
         return NULL;
+    col_nb = find_column(data, aggregate_by);
+    if (col_nb == -1)
+        return NULL;
+    for (size_t i = 0; to_aggregate[i]; i++) {
+        col_nb = find_column(data, to_aggregate[i]);
+        if (col_nb == -1)
+            return NULL;
+    }
     return data;
 }
