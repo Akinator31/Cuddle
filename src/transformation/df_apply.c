@@ -52,6 +52,8 @@ dataframe_t *df_apply(
     col = find_column(data, column);
     if (col == -1)
         return write_error(COLUMN_NOT_FOUND, column, -1);
+    if (!apply_func)
+        return write_error(APPLY_FUNC_NULL, NULL, -1);
     new_data = create_dataframe(data->nb_rows,
         data->nb_columns, data->delimiter);
     copy_columns(data, new_data);
