@@ -6,12 +6,15 @@
 */
 
 #include "dataframe.h"
+#include "errors.h"
 #include <sys/types.h>
 
 dataframe_shape_t df_shape(
     dataframe_t *data)
 {
-    if (!data)
+    if (!data) {
+        write_error(NO_DATAFRAME, NULL, -1);
         return (dataframe_shape_t){0, 0};
+    }
     return (dataframe_shape_t){(int)data->nb_rows, (int)data->nb_columns};
 }

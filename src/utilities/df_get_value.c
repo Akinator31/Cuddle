@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include "dataframe.h"
+#include "errors.h"
 #include "utils.h"
 
 void *df_get_value(
@@ -17,7 +18,7 @@ void *df_get_value(
     size_t row = (size_t)int_row;
 
     if (!dataframe || !column || row <= 0 || row > dataframe->nb_rows)
-        return NULL;
+        return write_error(NO_DATAFRAME, NULL, -1);
     row--;
     for (size_t i = 0; i < dataframe->nb_columns; i++) {
         if (strcmp(dataframe->columns[i].name, column) == 0)

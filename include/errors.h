@@ -18,6 +18,7 @@ enum error_codes {
     COLUMN_NOT_FOUND,
     BAD_DOWNCAST,
     APPLY_FUNC_NULL,
+    NO_DATAFRAME
 };
 
     #define WARNINGS_START 100

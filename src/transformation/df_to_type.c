@@ -13,6 +13,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+static bool apply_bool_downcast(
+    char *content,
+    column_type_t type)
+{
+    if (type == INT || type == UINT)
+        return (atoi(content) != 0);
+    if (type == FLOAT)
+        return (atof(content) != 0.00);
+    if (type == BOOL)
+        return (!strcmp(content, "true"));
+    return false;
+}
+
 static column_t *apply_downcast(
     column_t *column,
     column_type_t downcast,
@@ -24,13 +37,12 @@ static column_t *apply_downcast(
         if (downcast == FLOAT)
             ((double *)(column->content))[i] =
                 atof(column->content_strings[i]);
-        if (downcast == BOOL)
-            ((bool *)(column->content))[i] = column->content_strings[i];
-        if (column->type != STRING) {
-            free(column->content_strings[i]);
-            column->content_strings[i] =
-                content_to_str(column->content, column->type);
-        }
+        if (downcast == BOOL && column->type == STRING)
+            ((bool *)(column->content))[i] = true;
+        if (downcast == BOOL && column->type != STRING)
+            ((bool *)(column->content))[i] = apply_bool_downcast(
+                column->content_strings[i], column->type);
+        modify_string(column, i, downcast);
     }
     return column;
 }
@@ -67,8 +79,8 @@ dataframe_t *df_to_type(
     new = create_dataframe(data->nb_rows, data->nb_columns, data->delimiter);
     copy_columns(data, new);
     column = &new->columns[(size_t)col];
-    column->type = downcast;
     prepare_downcast(column, downcast, data->nb_rows);
     apply_downcast(column, downcast, data->nb_rows);
+    column->type = downcast;
     return new;
 }

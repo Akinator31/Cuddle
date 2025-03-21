@@ -6,13 +6,16 @@
 */
 
 #include <stdio.h>
+#include "errors.h"
 #include "utils.h"
 #include "dataframe.h"
 
 void df_info(dataframe_t *data)
 {
-    if (!data)
+    if (!data) {
+        write_error(NO_DATAFRAME, NULL, -1);
         return;
+    }
     printf("%lu columns:\n", data->nb_columns);
     for (size_t i = 0; i < data->nb_columns - 1; i++)
         printf("- %s: %s\n",

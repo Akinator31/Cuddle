@@ -6,6 +6,7 @@
 */
 
 #include "dataframe.h"
+#include "errors.h"
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -30,8 +31,10 @@ int df_write_csv(dataframe_t *data, const char *filename)
 {
     FILE *fptr = NULL;
 
-    if (!data)
+    if (!data) {
+        write_error(NO_DATAFRAME, NULL, -1);
         return 84;
+    }
     fptr = fopen(filename, "w");
     if (!fptr) {
         perror(strerror(errno));

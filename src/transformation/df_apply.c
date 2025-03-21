@@ -13,7 +13,26 @@
 #include "errors.h"
 #include "utils.h"
 
-// #Todo: split the function
+column_t *modify_string(
+    column_t *column,
+    size_t i,
+    column_type_t type)
+{
+    if (type == STRING)
+        return column;
+    free(column->content_strings[i]);
+    if (type == INT || type == UINT)
+        column->content_strings[i] =
+            content_to_str(&((int *)(column->content))[i], type);
+    if (type == FLOAT)
+        column->content_strings[i] =
+            content_to_str(&((double *)(column->content))[i], type);
+    if (type == BOOL)
+        column->content_strings[i] =
+            content_to_str(&((bool *)(column->content))[i], type);
+    return column;
+}
+
 static column_t *apply_to_column(
     column_t *column,
     void *(*func)(void *value),
@@ -32,11 +51,7 @@ static column_t *apply_to_column(
         if (column->type == STRING)
             column->content_strings[i] =
                 (char *)func(column->content_strings[i]);
-        if (column->type != STRING) {
-            free(column->content_strings[i]);
-            column->content_strings[i] =
-                strdup(content_to_str(column->content, column->type));
-        }
+        modify_string(column, i, column->type);
     }
     return column;
 }
@@ -49,11 +64,13 @@ dataframe_t *df_apply(
     dataframe_t *new_data = NULL;
     ssize_t col = 0;
 
+    if (!data)
+        return write_error(NO_DATAFRAME, NULL, -1);
+    if (!apply_func)
+        return write_error(APPLY_FUNC_NULL, NULL, -1);
     col = find_column(data, column);
     if (col == -1)
         return write_error(COLUMN_NOT_FOUND, column, -1);
-    if (!apply_func)
-        return write_error(APPLY_FUNC_NULL, NULL, -1);
     new_data = create_dataframe(data->nb_rows,
         data->nb_columns, data->delimiter);
     copy_columns(data, new_data);

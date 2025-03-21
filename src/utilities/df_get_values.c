@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "dataframe.h"
+#include "errors.h"
 
 static void **retrieve_column(
     column_t *column,
@@ -38,7 +39,7 @@ void **df_get_values(
     const char *column)
 {
     if (!dataframe || !column)
-        return NULL;
+        return write_error(NO_DATAFRAME, NULL, -1);
     for (size_t i = 0; i < dataframe->nb_columns; i++) {
         if (strcmp(dataframe->columns[i].name, column) == 0)
             return retrieve_column(&dataframe->columns[i], dataframe->nb_rows);

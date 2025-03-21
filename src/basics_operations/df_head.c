@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <string.h>
 #include "dataframe.h"
+#include "errors.h"
 #include "utils.h"
 
 dataframe_t *df_head(
@@ -19,7 +20,7 @@ dataframe_t *df_head(
     dataframe_t *new_dataframe = NULL;
 
     if (!dataframe || nb_rows < 0)
-        return NULL;
+        return write_error(NO_DATAFRAME, NULL, -1);
     if ((size_t)nb_rows > dataframe->nb_rows)
         nb_rows = (int)dataframe->nb_rows;
     new_dataframe = create_dataframe((size_t)nb_rows,

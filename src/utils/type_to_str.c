@@ -60,7 +60,7 @@ char *content_to_str(
     if (type == INT)
         sprintf(string, "%d", *(int *)(content));
     if (type == UINT)
-        sprintf(string, "%ud", *(uint *)(content));
+        sprintf(string, "%u", *(uint *)(content));
     if (type == FLOAT)
         sprintf(string, "%.2f", *(double *)(content));
     return string;

@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <float.h>
 #include "dataframe.h"
+#include "errors.h"
 
 static void is_min_or_max(
     double number,
@@ -84,8 +85,10 @@ void df_describe(dataframe_t *data)
 {
     column_type_t type = UNDEFINED;
 
-    if (!data)
+    if (!data) {
+        write_error(NO_DATAFRAME, NULL, -1);
         return;
+    }
     for (size_t i = 0; i < data->nb_columns; i++) {
         type = data->columns[i].type;
         if (type == INT || type == UINT || type == FLOAT)

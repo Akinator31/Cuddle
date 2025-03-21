@@ -81,4 +81,9 @@ bool check_downcast(
 
 int str_isdigit(char *str, size_t len);
 
+column_t *modify_string(
+    column_t *column,
+    size_t i,
+    column_type_t type);
+
 #endif

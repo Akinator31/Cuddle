@@ -62,7 +62,7 @@ dataframe_t *df_filter(
     ssize_t col = 0;
 
     if (!data || !filter_func)
-        return NULL;
+        return write_error(NO_DATAFRAME, NULL, -1);
     col = find_column(data, column);
     if (col == -1)
         return write_error(COLUMN_NOT_FOUND, column, -1);

@@ -15,13 +15,16 @@ INCLUDE = $(INCLUDE_H:%=-I%)
 
 OBJ = 	$(SRC:%.c=build/%.o)
 
+OBJ_BONUS = $(SRC:%.c=build-bonus/%.o)
+
 OBJ_DEBUG = $(SRC:%.c=build-debug/%.o)
 
 OBJ_TEST = $(SRC_TEST:%.c=build-test/%.o)
 
 COMPILE_FLAGS = -Weverything -Wno-pointer-bool-conversion \
 				-Wno-unused-command-line-argument -Wno-cast-qual \
-				-Wno-unsafe-buffer-usage -Wno-unknown-warning-option
+				-Wno-unsafe-buffer-usage -Wno-unknown-warning-option	\
+				-Wunreachable-code
 
 CFLAGS += 	-lm $(COMPILE_FLAGS) $(INCLUDE)
 
@@ -44,6 +47,10 @@ build/%.o: %.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
+build-bonus/%.o: %.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 build-debug/%.o: %.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(DEBUG_FLAGS) -c $< -o $@
@@ -58,14 +65,18 @@ $(LIB_NAME): $(OBJ)
 	@rm -f $(LIB_NAME)
 	@ar rc $(LIB_NAME) $(OBJ)
 
-$(DEBUG_NAME): $(OBJ_DEBUG)
+bonus: $(OBJ_BONUS)
 	@rm -f $(LIB_NAME)
-	@ar rc $(LIB_NAME) $(OBJ_DEBUG)
-	$(CC) src/main.c -o $(DEBUG_NAME) $(LIB_NAME) $(DEBUG_FLAGS)
+	@ar rc $(LIB_NAME) $(OBJ_BONUS)
 
-run: $(OBJ)
+$(DEBUG_NAME): $(OBJ)
 	@rm -f $(LIB_NAME)
 	@ar rc $(LIB_NAME) $(OBJ)
+	$(CC) src/main.c -o $(DEBUG_NAME) $(LIB_NAME) $(DEBUG_FLAGS)
+
+run: $(OBJ_BONUS)
+	@rm -f $(LIB_NAME)
+	@ar rc $(LIB_NAME) $(OBJ_BONUS)
 	$(CC) src/main.c -o $(RUN_NAME) $(LIB_NAME) $(CFLAGS)
 
 tests_run: $(OBJ_TEST)

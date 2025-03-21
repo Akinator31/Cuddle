@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dataframe.h"
+#include "errors.h"
 #include "utils.h"
 
 void free_column(
@@ -57,8 +58,10 @@ void df_free_safe(dataframe_t *data)
 
 void df_free(dataframe_t *data)
 {
-    if (!data)
+    if (!data) {
+        write_error(NO_DATAFRAME, NULL, -1);
         return;
+    }
     free_all_columns(data->columns, data->nb_rows, data->nb_columns);
     free(data->columns);
     free(data->delimiter);

@@ -8,9 +8,10 @@
 #include <string.h>
 #include <stdbool.h>
 #include "dataframe.h"
+#include "errors.h"
 #include "utils.h"
 
-dataframe_t *apply_sorting(
+static dataframe_t *apply_sorting(
     dataframe_t *new_dataframe,
     column_t *column_to_sort,
     bool (*sort_function)(void *value1, void *value2))
@@ -34,15 +35,16 @@ dataframe_t *df_sort(
     const char *column,
     bool (*sort_function)(void *value1, void *value2))
 {
-    size_t j = 0;
     ssize_t column_index = 0;
     column_t *column_to_sort = NULL;
     dataframe_t *new_dataframe = NULL;
 
     if (!dataframe || !column || !sort_function || !strlen(column))
-        return NULL;
+        return write_error(NO_DATAFRAME, NULL, -1);
+    column_index = find_column(dataframe, column);
+    if (column_index == -1)
+        return write_error(COLUMN_NOT_FOUND, column, -1);
     new_dataframe = df_head(dataframe, (int)dataframe->nb_rows);
-    column_index = find_column(new_dataframe, column);
     column_to_sort = &new_dataframe->columns[column_index];
     if (!column_to_sort)
         return new_dataframe;
