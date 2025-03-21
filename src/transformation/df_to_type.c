@@ -52,10 +52,11 @@ static column_t *prepare_downcast(
     column_type_t downcast,
     size_t nb_rows)
 {
-    if (column->content)
-        free(column->content);
-    if (downcast != STRING)
+    if (downcast != STRING) {
+        if (column->content)
+            free(column->content);
         column->content = malloc(content_size(downcast) * nb_rows);
+    }
     return column;
 }
 

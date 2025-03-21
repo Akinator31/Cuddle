@@ -131,12 +131,8 @@ static FILE *check_file(const char *filename)
     struct stat stat_buffer;
     FILE *fptr = NULL;
 
-    if (strcmp(".csv", strrchr(filename, '.')))
-        write_error(NOT_CSV, filename, -1);
-    if (stat(filename, &stat_buffer) == -1) {
-        perror(strerror(errno));
+    if (stat(filename, &stat_buffer) == -1)
         return NULL;
-    }
     if (stat_buffer.st_size == 0)
         return write_error(EMPTY_FILE, filename, -1);
     fptr = fopen(filename, READ_ONLY);

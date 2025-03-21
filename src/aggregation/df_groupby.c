@@ -12,9 +12,9 @@ dataframe_t *df_groupby(
     dataframe_t *data,
     __attribute__((unused))const char *aggregate_by,
     __attribute__((unused))const char **to_aggregate,
-    __attribute__((unused))void *(*agg_func)(void **values, int nb_values))
+    void *(*agg_func)(void **values, int nb_values))
 {
-    if (!data)
+    if (!data || !agg_func)
         return NULL;
     return data;
 }

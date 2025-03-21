@@ -109,5 +109,7 @@ bool check_downcast(
         can_downcast = check_uint_downcast(column, nb_rows);
     if (downcast == BOOL)
         can_downcast = check_bool_downcast(column, nb_rows);
+    if (downcast == STRING)
+        can_downcast = true;
     return can_downcast;
 }
