@@ -62,6 +62,6 @@ char *content_to_str(
     if (type == UINT)
         sprintf(string, "%ud", *(uint *)(content));
     if (type == FLOAT)
-        sprintf(string, "%f", *(double *)(content));
+        sprintf(string, "%.2f", *(double *)(content));
     return string;
 }

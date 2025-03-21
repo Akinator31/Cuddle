@@ -61,7 +61,7 @@ dataframe_t *df_filter(
     dataframe_t *new = NULL;
     ssize_t col = 0;
 
-    if (!data)
+    if (!data || !filter_func)
         return NULL;
     col = find_column(data, column);
     if (col == -1)

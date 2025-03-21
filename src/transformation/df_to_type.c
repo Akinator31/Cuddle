@@ -56,7 +56,7 @@ dataframe_t *df_to_type(
     dataframe_t *new = NULL;
     column_t *column = NULL;
 
-    if (!data)
+    if (!data || downcast >= UNDEFINED)
         return NULL;
     col = find_column(data, name);
     if (col == -1)

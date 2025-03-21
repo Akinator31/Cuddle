@@ -30,6 +30,8 @@ int df_write_csv(dataframe_t *data, const char *filename)
 {
     FILE *fptr = NULL;
 
+    if (!data)
+        return 84;
     fptr = fopen(filename, "w");
     if (!fptr) {
         perror(strerror(errno));
