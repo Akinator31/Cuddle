@@ -22,20 +22,6 @@ void *write_error(
     const char *before,
     ssize_t number)
 {
-    const char *string = NULL;
-
-    if (error_code < WARNINGS_START) {
-        string = error_strings[error_code];
-        printf("\033[31m");
-    } else {
-        string = warning_strings[error_code - WARNINGS_START];
-        printf("\033[36m");
-    }
-    if (before)
-        printf("%s:", before);
-    if (number != -1)
-        printf("%ld:", number);
-    printf(" %s\033[0m\n", string);
     return NULL;
 }
 
