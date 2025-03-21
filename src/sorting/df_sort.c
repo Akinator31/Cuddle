@@ -10,21 +10,13 @@
 #include "dataframe.h"
 #include "utils.h"
 
-dataframe_t *df_sort(
-    dataframe_t *dataframe,
-    const char *column,
+dataframe_t *apply_sorting(
+    dataframe_t *new_dataframe,
+    column_t *column_to_sort,
     bool (*sort_function)(void *value1, void *value2))
 {
     size_t j = 0;
-    ssize_t column_index = 0;
-    column_t *column_to_sort = NULL;
-    dataframe_t *new_dataframe = NULL;
 
-    new_dataframe = df_head(dataframe, (int)dataframe->nb_rows);
-    column_index = find_column(new_dataframe, column);
-    column_to_sort = &new_dataframe->columns[column_index];
-    if (!column_to_sort)
-        return new_dataframe;
     for (size_t i = 1; i < new_dataframe->nb_rows; i++) {
         j = i;
         while (j > 0 && sort_function(
@@ -35,4 +27,24 @@ dataframe_t *df_sort(
         }
     }
     return new_dataframe;
+}
+
+dataframe_t *df_sort(
+    dataframe_t *dataframe,
+    const char *column,
+    bool (*sort_function)(void *value1, void *value2))
+{
+    size_t j = 0;
+    ssize_t column_index = 0;
+    column_t *column_to_sort = NULL;
+    dataframe_t *new_dataframe = NULL;
+
+    if (!dataframe || !column || !sort_function || !strlen(column))
+        return NULL;
+    new_dataframe = df_head(dataframe, (int)dataframe->nb_rows);
+    column_index = find_column(new_dataframe, column);
+    column_to_sort = &new_dataframe->columns[column_index];
+    if (!column_to_sort)
+        return new_dataframe;
+    return apply_sorting(new_dataframe, column_to_sort, sort_function);
 }
