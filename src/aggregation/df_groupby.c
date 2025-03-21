@@ -17,7 +17,8 @@ dataframe_t *df_groupby(
 {
     ssize_t col_nb = 0;
 
-    if (!data || !aggregate_by || !to_aggregate || !agg_func)
+    if (!data || !aggregate_by || !to_aggregate
+        || !to_aggregate[0] || !agg_func)
         return NULL;
     col_nb = find_column(data, aggregate_by);
     if (col_nb == -1)
