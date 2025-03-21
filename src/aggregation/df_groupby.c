@@ -6,14 +6,15 @@
 */
 
 #include "dataframe.h"
-#include "errors.h"
-#include "utils.h"
+#include <stdio.h>
 
 dataframe_t *df_groupby(
-    __attribute__((unused))dataframe_t *data,
+    dataframe_t *data,
     __attribute__((unused))const char *aggregate_by,
     __attribute__((unused))const char **to_aggregate,
     __attribute__((unused))void *(*agg_func)(void **values, int nb_values))
 {
-    return NULL;
+    if (!data)
+        return NULL;
+    return data;
 }
